@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.settings
+package io.github.umatoma.multiwebmediaviewer.home
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData

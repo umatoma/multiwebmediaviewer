@@ -3,12 +3,9 @@ package io.github.umatoma.multiwebmediaviewer.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import io.github.umatoma.multiwebmediaviewer.R
-import io.github.umatoma.multiwebmediaviewer.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -36,23 +33,26 @@ class HomeActivity : AppCompatActivity() {
         setFragment(tabLayout.selectedTabPosition)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_home, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menuItemSetting -> SettingsActivity.startActivity(this)
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
-    }
-
     private fun setFragment(position: Int) {
-        supportFragmentManager.beginTransaction().also {
-            it.replace(R.id.fragmentContainer, HatenaEntryListFragment())
-            it.commit()
+        when (position) {
+            0 -> {
+                supportFragmentManager.beginTransaction().also {
+                    it.replace(R.id.fragmentContainer, HatenaEntryListFragment())
+                    it.commit()
+                }
+            }
+            1 -> {
+                supportFragmentManager.beginTransaction().also {
+                    it.replace(R.id.fragmentContainer, FeedlyEntryListFragment())
+                    it.commit()
+                }
+            }
+            2 -> {
+                supportFragmentManager.beginTransaction().also {
+                    it.replace(R.id.fragmentContainer, SettingsFragment())
+                    it.commit()
+                }
+            }
         }
     }
 }
