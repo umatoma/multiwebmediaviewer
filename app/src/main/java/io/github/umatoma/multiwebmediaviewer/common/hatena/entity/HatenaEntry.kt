@@ -1,29 +1,28 @@
 package io.github.umatoma.multiwebmediaviewer.common.hatena.entity
 
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 import java.net.URL
 
 class HatenaEntry(
+    @SerializedName("title")
     val title: String,
-    val titleLastEditor: String? = null,
+    @SerializedName("url")
     val url: String,
-    val rootUrl: String = HatenaEntry.urlToRootUrl(url),
-    val isInvalidUrl: Boolean = false,
+    @SerializedName("entry_url")
     val entryUrl: String,
-    val smartphoneAppEntryUrl: String? = null,
+    @SerializedName("screenshot")
     val imageUrl: String? = null,
-    val imageHatenaUrl: String? = null,
-    val imageLastEditor: String? = null,
-    val faviconUrl: String? = null,
+    @SerializedName("count")
     val count: Int,
-    val hasAsin: Boolean = false,
-    val eid: String? = null
+    @SerializedName("bookmarks")
+    val bookmarkList: List<HatenaBookmark>? = null
 ): Serializable {
+
     companion object {
-        private fun urlToRootUrl(urlString: String): String {
-            val url = URL(urlString)
-            val path = url.file.substring(0, url.file.lastIndexOf('/'))
-            return url.protocol.toString() + "://" + url.host + path
+        fun fromJSON(json: String): HatenaEntry {
+            return Gson().fromJson(json, HatenaEntry::class.java)
         }
     }
 
@@ -32,6 +31,12 @@ class HatenaEntry(
     }
 
     fun getUrlHost(): String {
-        return URL(rootUrl).host
+        return URL(getRootUrl()).host
+    }
+
+    private fun getRootUrl(): String {
+        val u = URL(url)
+        val path = u.file.substring(0, u.file.lastIndexOf('/'))
+        return u.protocol.toString() + "://" + u.host + path
     }
 }

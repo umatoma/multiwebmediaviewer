@@ -1,5 +1,6 @@
 package io.github.umatoma.multiwebmediaviewer.common.hatena.repository
 
+import com.google.gson.Gson
 import io.github.umatoma.multiwebmediaviewer.common.hatena.OAuth1AuthHeaderUtil
 import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.*
 import kotlinx.coroutines.Dispatchers
@@ -149,7 +150,7 @@ class HatenaRemoteRepository(
         return@withContext HatenaUser.fromJSON(response.body!!.string())
     }
 
-    suspend fun getEntry(url: String) = withContext(Dispatchers.IO) {
+    suspend fun getMyEntry(url: String) = withContext(Dispatchers.IO) {
         val requestUrl = "https://bookmark.hatenaapis.com/rest/1/entry"
             .toHttpUrl()
             .newBuilder()
@@ -163,6 +164,17 @@ class HatenaRemoteRepository(
         val body = executeAuthRequest(request)
 
         // TODO: parse body and return value
+    }
+
+    suspend fun getEntry(url: String): HatenaEntry = withContext(Dispatchers.IO) {
+        val requestUrl = "https://b.hatena.ne.jp/entry/json/${url}"
+
+        val request = Request.Builder()
+            .url(requestUrl)
+            .build()
+
+        val body = executeRequest(request)
+        return@withContext HatenaEntry.fromJSON(body)
     }
 
     suspend fun getHotEntryList(category: HatenaEntry.Category): List<HatenaEntry> =

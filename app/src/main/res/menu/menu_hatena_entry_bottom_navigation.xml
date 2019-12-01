@@ -18,5 +18,5 @@
     <item
         android:id="@+id/menuHatenaEntryOpen"
         android:icon="@drawable/ic_open_in_browser"
-        android:title="Open" />
+        android:title="Open in browser" />
 </menu>
