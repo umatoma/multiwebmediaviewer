@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuHatenaEntryBookmark"
+        android:icon="@drawable/ic_hatena_logo"
+        android:title="Bookmark" />
+
+    <item
+        android:id="@+id/menuHatenaEntryComment"
+        android:icon="@drawable/ic_comment"
+        android:title="Comments" />
+
+    <item
+        android:id="@+id/menuHatenaEntryShare"
+        android:icon="@drawable/ic_share"
+        android:title="Share" />
+
+    <item
+        android:id="@+id/menuHatenaEntryOpen"
+        android:icon="@drawable/ic_open_new_window"
+        android:title="Open" />
+</menu>

@@ -11,6 +11,11 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : AppCompatActivity() {
 
     companion object {
+
+        private const val POSITION_HATENA_ENTRY_LIST= 0
+        private const val POSITION_FEEDLY_ENTRY_LIST= 1
+        private const val POSITION_SETTINGS = 2
+
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, HomeActivity::class.java))
         }
@@ -35,19 +40,19 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setFragment(position: Int) {
         when (position) {
-            0 -> {
+            POSITION_HATENA_ENTRY_LIST -> {
                 supportFragmentManager.beginTransaction().also {
                     it.replace(R.id.fragmentContainer, HatenaEntryListFragment())
                     it.commit()
                 }
             }
-            1 -> {
+            POSITION_FEEDLY_ENTRY_LIST -> {
                 supportFragmentManager.beginTransaction().also {
                     it.replace(R.id.fragmentContainer, FeedlyEntryListFragment())
                     it.commit()
                 }
             }
-            2 -> {
+            POSITION_SETTINGS -> {
                 supportFragmentManager.beginTransaction().also {
                     it.replace(R.id.fragmentContainer, SettingsFragment())
                     it.commit()

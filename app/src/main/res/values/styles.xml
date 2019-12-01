@@ -9,4 +9,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.Icon">
+        <item name="android:width">20dp</item>
+        <item name="android:height">20dp</item>
+    </style>
+
+    <style name="AppTheme.TabLayout">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabIconTint">@color/colorPrimaryText</item>
+    </style>
+
 </resources>

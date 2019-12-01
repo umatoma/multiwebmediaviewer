@@ -10,7 +10,9 @@ import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaEntry
 import kotlinx.android.synthetic.main.adapter_hatena_entry_list_item.view.*
 import java.net.URL
 
-class HatenaEntryListAdapter: RecyclerView.Adapter<HatenaEntryListAdapter.ViewHolder>() {
+class HatenaEntryListAdapter(
+    private val onClickItem: (item: HatenaEntry) -> Unit
+): RecyclerView.Adapter<HatenaEntryListAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -26,6 +28,7 @@ class HatenaEntryListAdapter: RecyclerView.Adapter<HatenaEntryListAdapter.ViewHo
         val entry = entryList.get(position)
 
         holder.itemView.also {
+            it.setOnClickListener { onClickItem(entry) }
             it.txtHatenaEntryTitle.text = entry.title
             it.txtHatenaEntryRootUrl.text = URL(entry.rootUrl).host
 

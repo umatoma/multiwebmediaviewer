@@ -4,40 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.HomeActivity">
+    tools:context=".hatenaEntry.HatenaEntryActivity">
 
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
+    <WebView
+        android:id="@+id/webViewHatenaEntry"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        app:layout_constraintBottom_toTopOf="@+id/layoutHatenaEntryBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        style="@style/AppTheme.TabLayout"
+    <FrameLayout
+        android:id="@+id/layoutHatenaEntryBottom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationHatenaEntry"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:icon="@drawable/ic_hatena_logo" />
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimaryDark"
+            android:theme="@style/Theme.MaterialComponents"
+            app:itemIconTint="@color/colorPrimaryText"
+            app:itemTextColor="@color/colorPrimaryText"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/menu_hatena_entry_bottom_navigation" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_feedly_logo" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_setting" />
-    </com.google.android.material.tabs.TabLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

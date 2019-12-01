@@ -1,5 +1,6 @@
 package io.github.umatoma.multiwebmediaviewer.common.hatena.entity
 
+import java.io.Serializable
 import java.net.URL
 
 class HatenaEntry(
@@ -17,7 +18,7 @@ class HatenaEntry(
     val count: Int,
     val hasAsin: Boolean = false,
     val eid: String? = null
-) {
+): Serializable {
     companion object {
         private fun urlToRootUrl(urlString: String): String {
             val url = URL(urlString)
