@@ -23,16 +23,24 @@ class HatenaEntryActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetJavaScriptEnabled", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hatena_entry)
 
         val entry = intent.getSerializableExtra(KEY_HATENA_ENTRY) as HatenaEntry
 
-        webViewHatenaEntry.webViewClient = object : WebViewClient() {}
-        webViewHatenaEntry.settings.javaScriptEnabled = true
-        webViewHatenaEntry.loadUrl(entry.url)
+        supportActionBar?.let {
+            it.title = entry.title
+            it.subtitle = entry.getUrlHost()
+            it.setDisplayHomeAsUpEnabled(true)
+        }
+
+        webViewHatenaEntry.let {
+            it.webViewClient = object : WebViewClient() {}
+            it.settings.javaScriptEnabled = true
+            it.loadUrl(entry.url)
+        }
 
         bottomNavigationHatenaEntry
             .getOrCreateBadge(R.id.menuHatenaEntryComment).number = entry.count

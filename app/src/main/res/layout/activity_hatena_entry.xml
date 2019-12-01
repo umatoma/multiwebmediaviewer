@@ -29,10 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimaryDark"
-            android:theme="@style/Theme.MaterialComponents"
-            app:itemIconTint="@color/colorPrimaryText"
-            app:itemTextColor="@color/colorPrimaryText"
+            android:theme="@style/AppTheme.BottomNavigationView"
+            app:itemIconTint="@color/colorIconTintActive"
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/menu_hatena_entry_bottom_navigation" />
 

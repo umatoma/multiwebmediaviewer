@@ -30,4 +30,8 @@ class HatenaEntry(
     enum class Category(val id: String) {
         ALL("all")
     }
+
+    fun getUrlHost(): String {
+        return URL(rootUrl).host
+    }
 }

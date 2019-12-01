@@ -44,6 +44,8 @@ class HatenaEntryListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        requireActivity().title = getString(R.string.fragment_hatena_entry_list_title)
+
         val entryListAdapter = HatenaEntryListAdapter(
             onClickItem = { entry ->
                 HatenaEntryActivity.startActivity(requireContext(), entry)

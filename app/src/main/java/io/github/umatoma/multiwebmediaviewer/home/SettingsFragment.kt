@@ -16,6 +16,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
 
+            requireActivity().title = getString(R.string.fragment_settings_title)
+
             val viewModelFactory = SettingsViewModel.Factory(requireContext())
             val viewModel = ViewModelProviders
                 .of(this, viewModelFactory)

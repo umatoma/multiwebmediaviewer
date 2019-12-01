@@ -1,23 +1,26 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowNoTitle">true</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+<!--        <item name="android:textColorPrimary">@color/colorPrimaryText</item>-->
+<!--        <item name="android:textColorSecondary">@color/colorSecondaryText</item>-->
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.Icon">
-        <item name="android:width">20dp</item>
-        <item name="android:height">20dp</item>
-    </style>
-
-    <style name="AppTheme.TabLayout">
+    <style name="AppTheme.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="tabIndicatorColor">@color/colorAccent</item>
-        <item name="tabIconTint">@color/colorPrimaryText</item>
+        <item name="tabIconTint">@color/colorIconTintActive</item>
+    </style>
+
+    <style name="AppTheme.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:background">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

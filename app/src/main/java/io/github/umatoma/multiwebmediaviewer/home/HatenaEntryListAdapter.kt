@@ -30,7 +30,7 @@ class HatenaEntryListAdapter(
         holder.itemView.also {
             it.setOnClickListener { onClickItem(entry) }
             it.txtHatenaEntryTitle.text = entry.title
-            it.txtHatenaEntryRootUrl.text = URL(entry.rootUrl).host
+            it.txtHatenaEntryRootUrl.text = entry.getUrlHost()
 
             Picasso.get()
                 .load(entry.imageUrl)

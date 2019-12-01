@@ -18,4 +18,10 @@ class FeedlyEntryListFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_feedly_entry_list, container, false)
     }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        requireActivity().title = getString(R.string.fragment_feedly_entry_list_title)
+    }
 }
