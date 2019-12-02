@@ -19,8 +19,10 @@
         <item name="tabIconTint">@color/colorIconTintActive</item>
     </style>
 
-    <style name="AppTheme.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+    <style name="AppTheme.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="labelVisibilityMode">unlabeled</item>
+        <item name="itemIconTint">@color/color_hatena_entry_bottom_navigation</item>
     </style>
 
 </resources>

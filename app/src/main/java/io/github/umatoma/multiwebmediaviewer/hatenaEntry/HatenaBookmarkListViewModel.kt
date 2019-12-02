@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HatenaEntryViewModel(
+class HatenaBookmarkListViewModel(
     private val entry: HatenaEntry,
     private val remoteRepository: HatenaRemoteRepository
 ) : ViewModel() {
@@ -32,9 +32,9 @@ class HatenaEntryViewModel(
         }
     }
 
-    val bookmarkListLiveData: MutableLiveData<List<HatenaBookmark>> = MutableLiveData()
+    val bookmarkListLiveData: MutableLiveData<ArrayList<HatenaBookmark>> = MutableLiveData()
 
-    fun fetchCommentList() {
+    fun fetchBookmarkList() {
         if (bookmarkListLiveData.value == null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val entryWithBookmarkList = remoteRepository.getEntry(entry.url)

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".hatenaEntry.HatenaEntryActivity">
 
-    <WebView
-        android:id="@+id/webViewHatenaEntry"
+    <FrameLayout
+        android:id="@+id/layoutHatenaEntryContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/layoutHatenaEntryBottom"
@@ -26,12 +26,11 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationHatenaEntry"
+            style="@style/AppTheme.BottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:theme="@style/AppTheme.BottomNavigationView"
-            app:itemIconTint="@color/colorIconTintActive"
-            app:labelVisibilityMode="unlabeled"
+            android:theme="@style/Theme.MaterialComponents"
             app:menu="@menu/menu_hatena_entry_bottom_navigation" />
 
     </FrameLayout>

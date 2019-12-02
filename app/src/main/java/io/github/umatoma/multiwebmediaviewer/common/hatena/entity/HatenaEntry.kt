@@ -17,7 +17,7 @@ class HatenaEntry(
     @SerializedName("count")
     val count: Int,
     @SerializedName("bookmarks")
-    val bookmarkList: List<HatenaBookmark>? = null
+    val bookmarkList: ArrayList<HatenaBookmark>? = null
 ): Serializable {
 
     companion object {

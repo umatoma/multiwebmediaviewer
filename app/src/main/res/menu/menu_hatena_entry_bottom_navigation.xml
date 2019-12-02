@@ -9,14 +9,4 @@
         android:id="@+id/menuHatenaEntryComment"
         android:icon="@drawable/ic_comment"
         android:title="Comments" />
-
-    <item
-        android:id="@+id/menuHatenaEntryShare"
-        android:icon="@drawable/ic_share"
-        android:title="Share" />
-
-    <item
-        android:id="@+id/menuHatenaEntryOpen"
-        android:icon="@drawable/ic_open_in_browser"
-        android:title="Open in browser" />
 </menu>
