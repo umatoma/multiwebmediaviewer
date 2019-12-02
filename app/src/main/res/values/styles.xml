@@ -25,4 +25,9 @@
         <item name="itemIconTint">@color/color_hatena_entry_bottom_navigation</item>
     </style>
 
+    <style name="AppTheme.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/colorSecondary</item>
+        <item name="tint">@color/colorSecondaryText</item>
+    </style>
+
 </resources>

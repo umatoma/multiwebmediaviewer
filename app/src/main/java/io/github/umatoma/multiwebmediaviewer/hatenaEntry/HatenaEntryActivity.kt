@@ -1,10 +1,12 @@
 package io.github.umatoma.multiwebmediaviewer.hatenaEntry
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaEntry
 import kotlinx.android.synthetic.main.activity_hatena_entry.*
@@ -22,13 +24,19 @@ class HatenaEntryActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var entryFragment: HatenaEntryFragment
+    private lateinit var bookmarkListFragment: HatenaBookmarkListFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hatena_entry)
 
         val entry = intent.getSerializableExtra(KEY_HATENA_ENTRY) as HatenaEntry
-        val entryFragment = HatenaEntryFragment.newInstance(entry)
-        val bookmarkListFragment = HatenaBookmarkListFragment.newInstance(entry)
+        val viewModel = ViewModelProviders.of(this)
+            .get(HatenaEntryViewModel::class.java)
+
+        entryFragment = HatenaEntryFragment.newInstance(entry)
+        bookmarkListFragment = HatenaBookmarkListFragment.newInstance(entry)
 
         supportActionBar?.let {
             it.title = entry.title
@@ -41,33 +49,87 @@ class HatenaEntryActivity : AppCompatActivity() {
             it.setOnNavigationItemSelectedListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.menuHatenaEntryBookmark -> {
-                        supportFragmentManager.beginTransaction().also { transition ->
-                            transition.show(entryFragment)
-                            transition.hide(bookmarkListFragment)
-                            transition.commit()
-                        }
+                        showEntryFragment()
                         return@setOnNavigationItemSelectedListener true
                     }
                     R.id.menuHatenaEntryComment -> {
-                        supportFragmentManager.beginTransaction().also { transition ->
-                            transition.hide(entryFragment)
-                            transition.show(bookmarkListFragment)
-                            transition.commit()
-                        }
+                        showBookmarkListFragment()
                         return@setOnNavigationItemSelectedListener true
                     }
-                    else -> {
-                        return@setOnNavigationItemSelectedListener false
-                    }
                 }
+                return@setOnNavigationItemSelectedListener false
             }
         }
+
+        btnHatenaEntryOpenMenu.setOnClickListener {
+            viewModel.toggleFloatingActionButton()
+        }
+
+        btnHatenaEntryShare.setOnClickListener {
+            shareEntry(entry)
+        }
+
+        btnHatenaEntryOpenInBrowser.setOnClickListener {
+            openEntryInBrowser(entry)
+        }
+
+        btnHatenaEntryBookmark.setOnClickListener {
+            // TODO: Do bookmark
+        }
+
+        viewModel.isOpenFloatingActionButtonLiveData.observe(this, Observer {
+            setFloatingActionButtonsView(it)
+        })
 
         supportFragmentManager.beginTransaction().also {
             it.replace(R.id.layoutHatenaEntryContent, entryFragment)
             it.add(R.id.layoutHatenaEntryContent, bookmarkListFragment)
             it.hide(bookmarkListFragment)
             it.commit()
+        }
+    }
+
+    private fun showEntryFragment() {
+        supportFragmentManager.beginTransaction().also { transition ->
+            transition.show(entryFragment)
+            transition.hide(bookmarkListFragment)
+            transition.commit()
+        }
+    }
+
+    private fun showBookmarkListFragment() {
+        supportFragmentManager.beginTransaction().also { transition ->
+            transition.hide(entryFragment)
+            transition.show(bookmarkListFragment)
+            transition.commit()
+        }
+    }
+
+    private fun shareEntry(entry: HatenaEntry) {
+        val sendIntent = Intent().also {
+            it.action = Intent.ACTION_SEND
+            it.putExtra(Intent.EXTRA_TEXT, "${entry.title}\n${entry.url}")
+            it.type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
+    private fun openEntryInBrowser(entry: HatenaEntry) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entry.url)))
+    }
+
+    private fun setFloatingActionButtonsView(isOpen: Boolean) {
+        if (isOpen) {
+            btnHatenaEntryOpenMenu.setImageResource(R.drawable.ic_close)
+            btnHatenaEntryShare.show()
+            btnHatenaEntryOpenInBrowser.show()
+            btnHatenaEntryBookmark.show()
+        } else {
+            btnHatenaEntryOpenMenu.setImageResource(R.drawable.ic_menu)
+            btnHatenaEntryShare.hide()
+            btnHatenaEntryOpenInBrowser.hide()
+            btnHatenaEntryBookmark.hide()
         }
     }
 }
