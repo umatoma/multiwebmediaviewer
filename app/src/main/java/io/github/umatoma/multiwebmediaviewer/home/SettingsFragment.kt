@@ -1,5 +1,6 @@
 package io.github.umatoma.multiwebmediaviewer.home
 
+import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -9,28 +10,32 @@ import io.github.umatoma.multiwebmediaviewer.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        }
-
-        override fun onActivityCreated(savedInstanceState: Bundle?) {
-            super.onActivityCreated(savedInstanceState)
-
-            requireActivity().title = getString(R.string.fragment_settings_title)
-
-            val viewModelFactory = SettingsViewModel.Factory(requireContext())
-            val viewModel = ViewModelProviders
-                .of(this, viewModelFactory)
-                .get(SettingsViewModel::class.java)
-
-            val prefHatenaSignOut = findPreference<Preference>("hatenaSignOut")
-            prefHatenaSignOut?.setOnPreferenceClickListener {
-                viewModel.signOutHatena()
-                return@setOnPreferenceClickListener true
-            }
-
-            viewModel.isSignedInHatenaLiveData.observe(viewLifecycleOwner, Observer {
-                prefHatenaSignOut?.isEnabled = it
-            })
-        }
+    fun getTitle(context: Context): String {
+        return context.getString(R.string.fragment_settings_title)
     }
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.root_preferences, rootKey)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val homeViewModelFactory = HomeViewModel.Factory(requireContext())
+        val homeViewModel = ViewModelProviders
+            .of(requireActivity(), homeViewModelFactory)
+            .get(HomeViewModel::class.java)
+
+        val prefHatenaSignOut = findPreference<Preference>(
+            getString(R.string.fragment_settings_key_hatena_sign_out)
+        )
+        prefHatenaSignOut?.setOnPreferenceClickListener {
+            homeViewModel.signOutHatena()
+            return@setOnPreferenceClickListener true
+        }
+
+        homeViewModel.isSignedInHatenaLiveData.observe(viewLifecycleOwner, Observer {
+            prefHatenaSignOut?.isEnabled = it
+        })
+    }
+}

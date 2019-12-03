@@ -1,13 +1,11 @@
 package io.github.umatoma.multiwebmediaviewer.home
 
+import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,15 +15,12 @@ import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.hatenaAuth.HatenaAuthActivity
 import io.github.umatoma.multiwebmediaviewer.hatenaEntry.HatenaEntryActivity
 import kotlinx.android.synthetic.main.fragment_hatena_entry_list.*
+import kotlinx.android.synthetic.main.fragment_hatena_entry_list.btnHatenaSignIn
 
 class HatenaEntryListFragment : Fragment() {
 
-    private val viewModel by lazy {
-        val viewModelFactory = HatenaEntryListViewModel
-            .Factory(requireContext())
-        ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(HatenaEntryListViewModel::class.java)
+    fun getTitle(context: Context): String {
+        return context.getString(R.string.fragment_hatena_entry_list_title)
     }
 
     override fun onCreateView(
@@ -35,16 +30,13 @@ class HatenaEntryListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_hatena_entry_list, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.fetchIsSignedIn()
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        requireActivity().title = getString(R.string.fragment_hatena_entry_list_title)
+        val homeViewModelFactory = HomeViewModel.Factory(requireContext())
+        val homeViewModel = ViewModelProviders
+            .of(requireActivity(), homeViewModelFactory)
+            .get(HomeViewModel::class.java)
 
         val entryListAdapter = HatenaEntryListAdapter(
             onClickItem = { entry ->
@@ -67,54 +59,20 @@ class HatenaEntryListFragment : Fragment() {
             startActivity(Intent(requireContext(), HatenaAuthActivity::class.java))
         }
 
-        viewModel.isSignedInAndHasChangedLiveData.observe(
-            viewLifecycleOwner,
-            Observer { (isSignedIn, hasChanged) ->
-                if (isSignedIn) {
-                    layoutHatenaSignIn.visibility = View.GONE
-                    recyclerViewHatenaEntryList.visibility = View.VISIBLE
-
-                    if (hasChanged) {
-                        viewModel.fetchEntryList()
-                    }
-                } else {
-                    layoutHatenaSignIn.visibility = View.VISIBLE
-                    recyclerViewHatenaEntryList.visibility = View.GONE
-
-                    if (hasChanged) {
-                        viewModel.clearEntryList()
-                    }
-                }
-            })
-        viewModel.entryListLiveData.observe(viewLifecycleOwner, Observer {
+        homeViewModel.hatenaEntryListLiveData.observe(viewLifecycleOwner, Observer {
             entryListAdapter.setItemList(it)
         })
-    }
 
-//    private fun launchCustomTab(entry: HatenaEntry) {
-//        val intent =
-//            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.yahoo.co.jp/"))
-//        val actionIntent =
-//            PendingIntent.getActivity(requireContext(), 0, intent, 0)
-//        val toolbarColor =
-//            ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark)
-//
-//        // NOTE: setSecondaryToolbarViews() does not work...
-//        //       So, I use addToolbarItem() though it is deprecated.
-//        val customTabsIntent = CustomTabsIntent.Builder()
-//            .setToolbarColor(toolbarColor)
-//            .setSecondaryToolbarColor(toolbarColor)
-//            .addToolbarItem(1, getBitmap(R.drawable.ic_comment), "Comment", actionIntent)
-//            .addToolbarItem(2, getBitmap(R.drawable.ic_hatena_logo), "Bookmark", actionIntent)
-//            .addToolbarItem(3, getBitmap(R.drawable.ic_share), "Share", actionIntent)
-//            .addDefaultShareMenuItem()
-//            .setShowTitle(true)
-//            .build()
-//
-//        customTabsIntent.launchUrl(requireContext(), Uri.parse(entry.url))
-//    }
+        homeViewModel.isSignedInHatenaLiveData.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                recyclerViewHatenaEntryList.visibility = View.VISIBLE
+                layoutHatenaSignIn.visibility = View.GONE
+            } else {
+                recyclerViewHatenaEntryList.visibility = View.GONE
+                layoutHatenaSignIn.visibility = View.VISIBLE
+            }
+        })
 
-    private fun getBitmap(drawableId: Int): Bitmap {
-        return ResourcesCompat.getDrawable(resources, drawableId, null)!!.toBitmap()
+        homeViewModel.fetchHatenaEntryList()
     }
 }

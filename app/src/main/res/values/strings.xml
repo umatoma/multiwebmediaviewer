@@ -28,4 +28,5 @@
 
     <!-- SettingsFragment -->
     <string name="fragment_settings_title">設定</string>
+    <string name="fragment_settings_key_hatena_sign_out">KEY_HATENA_SIGN_OUT</string>
 </resources>

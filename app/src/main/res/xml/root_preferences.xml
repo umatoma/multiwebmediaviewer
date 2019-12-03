@@ -3,7 +3,7 @@
     <PreferenceCategory app:title="はてな">
 
         <Preference
-            app:key="hatenaSignOut"
+            app:key="@string/fragment_settings_key_hatena_sign_out"
             app:title="ログアウト"/>
 
         <EditTextPreference

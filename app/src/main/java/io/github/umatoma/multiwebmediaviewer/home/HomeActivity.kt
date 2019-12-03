@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -12,52 +13,107 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
 
-        private const val POSITION_HATENA_ENTRY_LIST= 0
-        private const val POSITION_FEEDLY_ENTRY_LIST= 1
-        private const val POSITION_SETTINGS = 2
-
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, HomeActivity::class.java))
         }
     }
 
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var hatenaEntryListFragment: HatenaEntryListFragment
+    private lateinit var feedlyEntryListFragment: FeedlyEntryListFragment
+    private lateinit var settingsFragment: SettingsFragment
+    private lateinit var fragmentArray: Array<Fragment>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab) {}
+        val viewModelFactory = HomeViewModel.Factory(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(HomeViewModel::class.java)
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
+        hatenaEntryListFragment = HatenaEntryListFragment()
+        feedlyEntryListFragment = FeedlyEntryListFragment()
+        settingsFragment = SettingsFragment()
 
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                setFragment(tab.position)
-            }
-        })
+        fragmentArray = arrayOf(
+            hatenaEntryListFragment,
+            feedlyEntryListFragment,
+            settingsFragment
+        )
 
-        setFragment(tabLayout.selectedTabPosition)
-    }
-
-    private fun setFragment(position: Int) {
-        when (position) {
-            POSITION_HATENA_ENTRY_LIST -> {
-                supportFragmentManager.beginTransaction().also {
-                    it.replace(R.id.fragmentContainer, HatenaEntryListFragment())
-                    it.commit()
+        bottomNavigationHome.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.menuHatenaEntryList -> {
+                    showHatenaEntryListFragment()
+                }
+                R.id.menuFeelyEntryList -> {
+                    showFeedlyEntryListFragment()
+                }
+                R.id.menuSettings -> {
+                    showSettingsFragment()
+                }
+                else -> {
+                    return@setOnNavigationItemSelectedListener true
                 }
             }
-            POSITION_FEEDLY_ENTRY_LIST -> {
-                supportFragmentManager.beginTransaction().also {
-                    it.replace(R.id.fragmentContainer, FeedlyEntryListFragment())
-                    it.commit()
-                }
-            }
-            POSITION_SETTINGS -> {
-                supportFragmentManager.beginTransaction().also {
-                    it.replace(R.id.fragmentContainer, SettingsFragment())
-                    it.commit()
-                }
-            }
+            return@setOnNavigationItemSelectedListener true
         }
+
+        initAndShowHatenaEntryFragment()
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.fetchIsSignedInAny()
+    }
+
+    private fun showHatenaEntryListFragment() {
+        showFragment(
+            hatenaEntryListFragment,
+            hatenaEntryListFragment.getTitle(this)
+        )
+    }
+
+    private fun showFeedlyEntryListFragment() {
+        showFragment(
+            feedlyEntryListFragment,
+            feedlyEntryListFragment.getTitle(this)
+        )
+    }
+
+    private fun showSettingsFragment() {
+        showFragment(
+            settingsFragment,
+            settingsFragment.getTitle(this)
+        )
+    }
+
+    private fun initAndShowHatenaEntryFragment() {
+        supportFragmentManager.beginTransaction().also {
+            for (fragment in fragmentArray) {
+                it.add(R.id.layoutHomeContent, fragment)
+            }
+            it.commit()
+        }
+
+        showHatenaEntryListFragment()
+    }
+
+    private fun showFragment(targetFragment: Fragment, title: String) {
+        supportFragmentManager.beginTransaction().also {
+            for (fragment in fragmentArray) {
+                if (targetFragment === fragment) {
+                    it.show(fragment)
+                } else {
+                    it.hide(fragment)
+                }
+            }
+            it.commit()
+        }
+
+        setTitle(title)
+    }
+
 }

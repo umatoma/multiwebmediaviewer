@@ -50,14 +50,15 @@ class HatenaEntryActivity : AppCompatActivity() {
                 when (menuItem.itemId) {
                     R.id.menuHatenaEntryBookmark -> {
                         showEntryFragment()
-                        return@setOnNavigationItemSelectedListener true
                     }
                     R.id.menuHatenaEntryComment -> {
                         showBookmarkListFragment()
-                        return@setOnNavigationItemSelectedListener true
+                    }
+                    else -> {
+                        return@setOnNavigationItemSelectedListener false
                     }
                 }
-                return@setOnNavigationItemSelectedListener false
+                return@setOnNavigationItemSelectedListener true
             }
         }
 
