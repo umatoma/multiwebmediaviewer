@@ -1,6 +1,5 @@
 package io.github.umatoma.multiwebmediaviewer.common.hatena.repository
 
-import com.google.gson.Gson
 import io.github.umatoma.multiwebmediaviewer.common.hatena.OAuth1AuthHeaderUtil
 import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.*
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +11,6 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simpleframework.xml.core.Persister
 import java.io.IOException
-import java.net.URL
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -181,6 +179,26 @@ class HatenaRemoteRepository(
         withContext(Dispatchers.IO) {
             val request = Request.Builder()
                 .url("https://b.hatena.ne.jp/hotentry/${category.id}.rss")
+                .build()
+
+            val body = executeRequest(request)
+            val root = Persister().read(HatenaRssRoot::class.java, body)
+
+            return@withContext root.itemList!!.map {
+                HatenaEntry(
+                    title = it.title!!,
+                    url = it.link!!,
+                    entryUrl = it.bookmarkSiteEntriesListUrl!!,
+                    imageUrl = it.imageurl,
+                    count = it.bookmarkcount!!.toInt()
+                )
+            }
+        }
+
+    suspend fun getNewEntryList(category: HatenaEntry.Category): List<HatenaEntry> =
+        withContext(Dispatchers.IO) {
+            val request = Request.Builder()
+                .url("https://b.hatena.ne.jp/entrylist/${category.id}.rss")
                 .build()
 
             val body = executeRequest(request)

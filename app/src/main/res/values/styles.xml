@@ -10,13 +10,13 @@
         <item name="colorSecondary">@color/colorSecondary</item>
 <!--        <item name="android:textColorPrimary">@color/colorPrimaryText</item>-->
 <!--        <item name="android:textColorSecondary">@color/colorSecondaryText</item>-->
+        <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+    <style name="AppTheme.PagerTabStrip">
         <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="tabIndicatorColor">@color/colorAccent</item>
-        <item name="tabIconTint">@color/colorIconTintActive</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
     <style name="AppTheme.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">

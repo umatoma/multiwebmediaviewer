@@ -19,7 +19,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: HomeViewModel
-    private lateinit var hatenaEntryListFragment: HatenaEntryListFragment
+    private lateinit var hatenaEntryListFragment: HatenaEntryListContainerFragment
     private lateinit var feedlyEntryListFragment: FeedlyEntryListFragment
     private lateinit var settingsFragment: SettingsFragment
     private lateinit var fragmentArray: Array<Fragment>
@@ -32,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(HomeViewModel::class.java)
 
-        hatenaEntryListFragment = HatenaEntryListFragment()
+        hatenaEntryListFragment = HatenaEntryListContainerFragment()
         feedlyEntryListFragment = FeedlyEntryListFragment()
         settingsFragment = SettingsFragment()
 

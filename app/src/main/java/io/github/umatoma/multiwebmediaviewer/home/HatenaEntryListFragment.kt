@@ -1,7 +1,6 @@
 package io.github.umatoma.multiwebmediaviewer.home
 
-import android.content.Context
-import android.content.Intent
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,15 +11,28 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.umatoma.multiwebmediaviewer.R
-import io.github.umatoma.multiwebmediaviewer.hatenaAuth.HatenaAuthActivity
+import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaEntry
 import io.github.umatoma.multiwebmediaviewer.hatenaEntry.HatenaEntryActivity
 import kotlinx.android.synthetic.main.fragment_hatena_entry_list.*
-import kotlinx.android.synthetic.main.fragment_hatena_entry_list.btnHatenaSignIn
 
 class HatenaEntryListFragment : Fragment() {
 
-    fun getTitle(context: Context): String {
-        return context.getString(R.string.fragment_hatena_entry_list_title)
+    companion object {
+        private const val KEY_ENTRY_TYPE = "KEY_ENTRY_TYPE"
+        private const val KEY_ENTRY_CATEGORY = "KEY_ENTRY_CATEGORY"
+
+        fun newInstance(
+            type: HatenaEntry.Type,
+            category: HatenaEntry.Category
+        ): HatenaEntryListFragment {
+            val bundle = Bundle().also {
+                it.putSerializable(KEY_ENTRY_TYPE, type)
+                it.putSerializable(KEY_ENTRY_CATEGORY, category)
+            }
+            return HatenaEntryListFragment().also {
+                it.arguments = bundle
+            }
+        }
     }
 
     override fun onCreateView(
@@ -33,10 +45,16 @@ class HatenaEntryListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val homeViewModelFactory = HomeViewModel.Factory(requireContext())
-        val homeViewModel = ViewModelProviders
-            .of(requireActivity(), homeViewModelFactory)
-            .get(HomeViewModel::class.java)
+        val entryType = requireArguments()
+            .getSerializable(KEY_ENTRY_TYPE) as HatenaEntry.Type
+        val entryCategory = requireArguments()
+            .getSerializable(KEY_ENTRY_CATEGORY) as HatenaEntry.Category
+
+        val viewModelFactory =
+            HatenaEntryListViewModel.Factory(entryType, entryCategory, requireContext())
+        val viewModel = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(HatenaEntryListViewModel::class.java)
 
         val entryListAdapter = HatenaEntryListAdapter(
             onClickItem = { entry ->
@@ -55,24 +73,18 @@ class HatenaEntryListFragment : Fragment() {
             it.adapter = entryListAdapter
         }
 
-        btnHatenaSignIn.setOnClickListener {
-            startActivity(Intent(requireContext(), HatenaAuthActivity::class.java))
+        swipeRefreshHatenaEntryList.setOnRefreshListener {
+            viewModel.fetchHatenaEntryList()
         }
 
-        homeViewModel.hatenaEntryListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.isFetchingLiveData.observe(viewLifecycleOwner, Observer {
+            swipeRefreshHatenaEntryList.isRefreshing = it
+        })
+
+        viewModel.hatenaEntryListLiveData.observe(viewLifecycleOwner, Observer {
             entryListAdapter.setItemList(it)
         })
 
-        homeViewModel.isSignedInHatenaLiveData.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                recyclerViewHatenaEntryList.visibility = View.VISIBLE
-                layoutHatenaSignIn.visibility = View.GONE
-            } else {
-                recyclerViewHatenaEntryList.visibility = View.GONE
-                layoutHatenaSignIn.visibility = View.VISIBLE
-            }
-        })
-
-        homeViewModel.fetchHatenaEntryList()
+        viewModel.fetchHatenaEntryList()
     }
 }

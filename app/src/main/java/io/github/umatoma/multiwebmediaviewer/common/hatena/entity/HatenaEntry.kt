@@ -26,6 +26,11 @@ class HatenaEntry(
         }
     }
 
+    enum class Type(val id: String) {
+        NEW("new"),
+        HOT("hot")
+    }
+
     enum class Category(val id: String) {
         ALL("all")
     }
