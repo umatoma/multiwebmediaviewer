@@ -1,7 +1,10 @@
 package io.github.umatoma.multiwebmediaviewer.common.hatena.repository
 
 import io.github.umatoma.multiwebmediaviewer.common.hatena.OAuth1AuthHeaderUtil
-import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.*
+import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaAccessToken
+import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaEntry
+import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaRequestToken
+import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -9,7 +12,6 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
-import org.simpleframework.xml.core.Persister
 import java.io.IOException
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -175,44 +177,52 @@ class HatenaRemoteRepository(
         return@withContext HatenaEntry.fromJSON(body)
     }
 
-    suspend fun getHotEntryList(category: HatenaEntry.Category): List<HatenaEntry> =
+    suspend fun getHotEntryList(
+        category: HatenaEntry.Category,
+        pageNumber: Int
+    ): List<HatenaEntry> =
         withContext(Dispatchers.IO) {
+            val limit = 30
+            val offset = limit * (pageNumber - 1)
+
+            val requestUrl = "https://b.hatena.ne.jp/api/ipad.hotentry.json"
+                .toHttpUrl()
+                .newBuilder()
+                .addQueryParameter("category_id", category.numId)
+                .addQueryParameter("limit", limit.toString())
+                .addQueryParameter("of", offset.toString())
+                .build()
+
             val request = Request.Builder()
-                .url("https://b.hatena.ne.jp/hotentry/${category.id}.rss")
+                .url(requestUrl)
                 .build()
 
             val body = executeRequest(request)
-            val root = Persister().read(HatenaRssRoot::class.java, body)
-
-            return@withContext root.itemList!!.map {
-                HatenaEntry(
-                    title = it.title!!,
-                    url = it.link!!,
-                    entryUrl = it.bookmarkSiteEntriesListUrl!!,
-                    imageUrl = it.imageurl,
-                    count = it.bookmarkcount!!.toInt()
-                )
-            }
+            return@withContext HatenaEntry.fromListJSON(body)
         }
 
-    suspend fun getNewEntryList(category: HatenaEntry.Category): List<HatenaEntry> =
+    suspend fun getNewEntryList(
+        category: HatenaEntry.Category,
+        pageNumber: Int
+    ): List<HatenaEntry> =
         withContext(Dispatchers.IO) {
+            val limit = 30
+            val offset = limit * (pageNumber - 1)
+
+            val requestUrl = "https://b.hatena.ne.jp/api/ipad.newentry.json"
+                .toHttpUrl()
+                .newBuilder()
+                .addQueryParameter("category_id", category.numId)
+                .addQueryParameter("limit", limit.toString())
+                .addQueryParameter("of", offset.toString())
+                .build()
+
             val request = Request.Builder()
-                .url("https://b.hatena.ne.jp/entrylist/${category.id}.rss")
+                .url(requestUrl)
                 .build()
 
             val body = executeRequest(request)
-            val root = Persister().read(HatenaRssRoot::class.java, body)
-
-            return@withContext root.itemList!!.map {
-                HatenaEntry(
-                    title = it.title!!,
-                    url = it.link!!,
-                    entryUrl = it.bookmarkSiteEntriesListUrl!!,
-                    imageUrl = it.imageurl,
-                    count = it.bookmarkcount!!.toInt()
-                )
-            }
+            return@withContext HatenaEntry.fromListJSON(body)
         }
 
     private fun executeAuthRequest(request: Request): String {

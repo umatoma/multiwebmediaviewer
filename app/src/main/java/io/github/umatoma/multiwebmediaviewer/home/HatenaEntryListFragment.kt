@@ -22,11 +22,11 @@ class HatenaEntryListFragment : Fragment() {
         private const val KEY_ENTRY_CATEGORY = "KEY_ENTRY_CATEGORY"
 
         fun newInstance(
-            type: HatenaEntry.Type,
+            kind: HatenaEntry.Kind,
             category: HatenaEntry.Category
         ): HatenaEntryListFragment {
             val bundle = Bundle().also {
-                it.putSerializable(KEY_ENTRY_TYPE, type)
+                it.putSerializable(KEY_ENTRY_TYPE, kind)
                 it.putSerializable(KEY_ENTRY_CATEGORY, category)
             }
             return HatenaEntryListFragment().also {
@@ -46,7 +46,7 @@ class HatenaEntryListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val entryType = requireArguments()
-            .getSerializable(KEY_ENTRY_TYPE) as HatenaEntry.Type
+            .getSerializable(KEY_ENTRY_TYPE) as HatenaEntry.Kind
         val entryCategory = requireArguments()
             .getSerializable(KEY_ENTRY_CATEGORY) as HatenaEntry.Category
 
@@ -56,11 +56,14 @@ class HatenaEntryListFragment : Fragment() {
             .of(this, viewModelFactory)
             .get(HatenaEntryListViewModel::class.java)
 
-        val entryListAdapter = HatenaEntryListAdapter(
-            onClickItem = { entry ->
+        val entryListAdapter = HatenaEntryListAdapter().also {
+            it.onClickEntry { entry ->
                 HatenaEntryActivity.startActivity(requireContext(), entry)
             }
-        )
+            it.onClickFooter {
+                viewModel.fetchHatenaEntryListOnNextPage()
+            }
+        }
 
         recyclerViewHatenaEntryList.also {
             val divider = DividerItemDecoration(
@@ -82,7 +85,7 @@ class HatenaEntryListFragment : Fragment() {
         })
 
         viewModel.hatenaEntryListLiveData.observe(viewLifecycleOwner, Observer {
-            entryListAdapter.setItemList(it)
+            entryListAdapter.setEntryList(it)
         })
 
         viewModel.fetchHatenaEntryList()

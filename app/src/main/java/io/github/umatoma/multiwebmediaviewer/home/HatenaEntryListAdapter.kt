@@ -1,52 +1,77 @@
 package io.github.umatoma.multiwebmediaviewer.home
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import com.xwray.groupie.Section
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.common.hatena.entity.HatenaEntry
 import kotlinx.android.synthetic.main.adapter_hatena_entry_list_item.view.*
-import java.net.URL
 
-class HatenaEntryListAdapter(
-    private val onClickItem: (item: HatenaEntry) -> Unit
-): RecyclerView.Adapter<HatenaEntryListAdapter.ViewHolder>() {
+class HatenaEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class EntryItem(val entry: HatenaEntry) : Item<GroupieViewHolder>() {
 
-    private val entryList: MutableList<HatenaEntry> = mutableListOf()
+        override fun getLayout(): Int {
+            return R.layout.adapter_hatena_entry_list_item
+        }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_hatena_entry_list_item, parent, false)
-        return ViewHolder(view)
-    }
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+            viewHolder.itemView.also {
+                it.txtHatenaEntryTitle.text = entry.title
+                it.txtHatenaEntryCount.text = entry.count.toString()
+                it.txtHatenaEntryRootUrl.text = entry.getUrlHost()
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entry = entryList.get(position)
-
-        holder.itemView.also {
-            it.setOnClickListener { onClickItem(entry) }
-            it.txtHatenaEntryTitle.text = entry.title
-            it.txtHatenaEntryRootUrl.text = entry.getUrlHost()
-
-            Picasso.get()
-                .load(entry.imageUrl)
-                .fit()
-                .centerCrop()
-                .into(it.imgHatenaEntryImage)
+                Picasso.get()
+                    .load(entry.getImageUrl())
+                    .fit()
+                    .centerCrop()
+                    .into(it.imgHatenaEntryImage)
+            }
         }
     }
 
-    override fun getItemCount(): Int {
-        return entryList.size
+    class FooterItem() : Item<GroupieViewHolder>() {
+
+        override fun getLayout(): Int {
+            return R.layout.adapter_hatena_entry_list_footer_item
+        }
+
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {}
     }
 
-    fun setItemList(itemList: List<HatenaEntry>) {
-        entryList.clear()
-        entryList.addAll(itemList)
+    private val footerItem = FooterItem()
+    private val entryItemListSection = Section()
+    private var onClickEntryListener: ((HatenaEntry) -> Unit)? = null
+    private var onClickFooterListener: (() -> Unit)? = null
+
+    init {
+        add(entryItemListSection)
+        setOnItemClickListener { item, view ->
+            when (item) {
+                is EntryItem -> onClickEntryListener?.invoke(item.entry)
+                is FooterItem -> onClickFooterListener?.invoke()
+            }
+        }
+    }
+
+    fun onClickEntry(onClick: (HatenaEntry) -> Unit) {
+        onClickEntryListener = onClick
+    }
+
+    fun onClickFooter(onClick: () -> Unit) {
+        onClickFooterListener = onClick
+    }
+
+    fun setEntryList(entryList: List<HatenaEntry>) {
+        entryItemListSection.clear()
+        entryItemListSection.addAll(entryList.map { EntryItem(it) })
+
+        if (entryList.isNotEmpty()) {
+            entryItemListSection.setFooter(footerItem)
+        }
+
         notifyDataSetChanged()
     }
 }

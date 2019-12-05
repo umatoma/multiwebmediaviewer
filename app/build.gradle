@@ -61,6 +61,10 @@ dependencies {
     // SimpleXML
     implementation 'org.simpleframework:simple-xml:2.7.1'
 
+    // Groupie
+    implementation 'com.xwray:groupie:2.7.0'
+    implementation 'com.xwray:groupie-databinding:2.7.0'
+
     // JUnit
     testImplementation 'junit:junit:4.12'
     // androidTestImplementation 'androidx.test.ext:junit:1.1.1'

@@ -12,13 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HatenaEntryListViewModel(
-    private val entryType: HatenaEntry.Type,
+    private val entryKind: HatenaEntry.Kind,
     private val entryCategory: HatenaEntry.Category,
     private val hatenaRemoteRepository: HatenaRemoteRepository
 ) : ViewModel() {
 
     class Factory(
-        private val entryType: HatenaEntry.Type,
+        private val entryKind: HatenaEntry.Kind,
         private val entryCategory: HatenaEntry.Category,
         private val context: Context
     ) : ViewModelProvider.Factory {
@@ -29,12 +29,12 @@ class HatenaEntryListViewModel(
 
             return modelClass
                 .getConstructor(
-                    HatenaEntry.Type::class.java,
+                    HatenaEntry.Kind::class.java,
                     HatenaEntry.Category::class.java,
                     HatenaRemoteRepository::class.java
                 )
                 .newInstance(
-                    entryType,
+                    entryKind,
                     entryCategory,
                     hatenaRemoteRepository
                 )
@@ -44,19 +44,32 @@ class HatenaEntryListViewModel(
     val isFetchingLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
     val hatenaEntryListLiveData: MutableLiveData<List<HatenaEntry>> = MutableLiveData()
 
-    fun fetchHatenaEntryList() {
+    private var entryListPageNumber: Int = 1;
+
+    fun fetchHatenaEntryList(pageNumber: Int = 1) {
         CoroutineScope(Dispatchers.IO).launch {
-            val entryList = when (entryType) {
-                HatenaEntry.Type.HOT -> {
-                    hatenaRemoteRepository.getHotEntryList(entryCategory)
+            val entryList = when (entryKind) {
+                HatenaEntry.Kind.HOT -> {
+                    hatenaRemoteRepository.getHotEntryList(entryCategory, pageNumber)
                 }
-                HatenaEntry.Type.NEW -> {
-                    hatenaRemoteRepository.getNewEntryList(entryCategory)
+                HatenaEntry.Kind.NEW -> {
+                    hatenaRemoteRepository.getNewEntryList(entryCategory, pageNumber)
                 }
             }
+
             isFetchingLiveData.postValue(false)
-            hatenaEntryListLiveData.postValue(entryList)
+            entryListPageNumber = pageNumber
+
+            if (entryListPageNumber == 1) {
+                hatenaEntryListLiveData.postValue(entryList)
+            } else {
+                hatenaEntryListLiveData.postValue(hatenaEntryListLiveData.value!! + entryList)
+            }
         }
         isFetchingLiveData.postValue(true)
+    }
+
+    fun fetchHatenaEntryListOnNextPage() {
+        fetchHatenaEntryList(entryListPageNumber + 1)
     }
 }
