@@ -30,9 +30,9 @@ class HatenaAuthViewModel(
         }
     }
 
-    var exceptionLiveData: MutableLiveData<Exception> = MutableLiveData()
-    var authenticationUrlLiveData: MutableLiveData<String> = MutableLiveData()
-    var accessTokenLiveData: MutableLiveData<HatenaAccessToken> = MutableLiveData()
+    val exceptionLiveData: MutableLiveData<Exception> = MutableLiveData()
+    val authenticationUrlLiveData: MutableLiveData<String> = MutableLiveData()
+    val accessTokenLiveData: MutableLiveData<HatenaAccessToken> = MutableLiveData()
 
     private var requestToken: HatenaRequestToken? = null
 

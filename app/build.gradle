@@ -58,8 +58,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
 
-    // SimpleXML
-    implementation 'org.simpleframework:simple-xml:2.7.1'
+    implementation 'org.nanohttpd:nanohttpd:2.2.0'
 
     // Groupie
     implementation 'com.xwray:groupie:2.7.0'

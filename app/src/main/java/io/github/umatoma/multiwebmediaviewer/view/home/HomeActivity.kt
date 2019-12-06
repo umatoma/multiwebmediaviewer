@@ -20,8 +20,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: HomeViewModel
-    private lateinit var hatenaEntryListFragment: HatenaEntryListContainerFragment
-    private lateinit var feedlyEntryListFragment: FeedlyEntryListFragment
+    private lateinit var hatenaEntryListContainerFragment: HatenaEntryListContainerFragment
+    private lateinit var feedlyEntryListContainerFragment: FeedlyEntryListContainerFragment
     private lateinit var settingsFragment: SettingsFragment
     private lateinit var fragmentArray: Array<Fragment>
 
@@ -33,23 +33,23 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(HomeViewModel::class.java)
 
-        hatenaEntryListFragment = HatenaEntryListContainerFragment()
-        feedlyEntryListFragment = FeedlyEntryListFragment()
+        hatenaEntryListContainerFragment = HatenaEntryListContainerFragment()
+        feedlyEntryListContainerFragment = FeedlyEntryListContainerFragment()
         settingsFragment = SettingsFragment()
 
         fragmentArray = arrayOf(
-            hatenaEntryListFragment,
-            feedlyEntryListFragment,
+            hatenaEntryListContainerFragment,
+            feedlyEntryListContainerFragment,
             settingsFragment
         )
 
         bottomNavigationHome.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.menuHatenaEntryList -> {
-                    showHatenaEntryListFragment()
+                    showHatenaEntryListContainerFragment()
                 }
                 R.id.menuFeelyEntryList -> {
-                    showFeedlyEntryListFragment()
+                    showFeedlyEntryListContainerFragment()
                 }
                 R.id.menuSettings -> {
                     showSettingsFragment()
@@ -70,17 +70,17 @@ class HomeActivity : AppCompatActivity() {
         viewModel.fetchIsSignedInAny()
     }
 
-    private fun showHatenaEntryListFragment() {
+    private fun showHatenaEntryListContainerFragment() {
         showFragment(
-            hatenaEntryListFragment,
-            hatenaEntryListFragment.getTitle(this)
+            hatenaEntryListContainerFragment,
+            hatenaEntryListContainerFragment.getTitle(this)
         )
     }
 
-    private fun showFeedlyEntryListFragment() {
+    private fun showFeedlyEntryListContainerFragment() {
         showFragment(
-            feedlyEntryListFragment,
-            feedlyEntryListFragment.getTitle(this)
+            feedlyEntryListContainerFragment,
+            feedlyEntryListContainerFragment.getTitle(this)
         )
     }
 
@@ -99,7 +99,7 @@ class HomeActivity : AppCompatActivity() {
             it.commit()
         }
 
-        showHatenaEntryListFragment()
+        showHatenaEntryListContainerFragment()
     }
 
     private fun showFragment(targetFragment: Fragment, title: String) {
