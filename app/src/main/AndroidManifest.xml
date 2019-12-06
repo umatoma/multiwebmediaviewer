@@ -12,13 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".hatenaEntry.HatenaEntryActivity" />
+        <activity android:name="io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.HatenaEntryActivity" />
         <activity
-            android:name=".home.HomeActivity"
+            android:name="io.github.umatoma.multiwebmediaviewer.view.home.HomeActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".hatenaAuth.HatenaAuthActivity" />
-        <activity android:name=".start.StartActivity">
+        <activity android:name="io.github.umatoma.multiwebmediaviewer.view.hatenaAuth.HatenaAuthActivity" />
+        <activity android:name="io.github.umatoma.multiwebmediaviewer.view.start.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
