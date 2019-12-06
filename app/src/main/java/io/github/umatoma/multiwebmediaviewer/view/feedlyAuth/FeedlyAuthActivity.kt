@@ -45,7 +45,6 @@ class FeedlyAuthActivity : AppCompatActivity() {
         viewModel.exceptionLiveData.observe(this, Observer {
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
         })
-
         viewModel.accessTokenLiveData.observe(this, Observer {
             HomeActivity.startActivity(this)
             finish()
@@ -53,7 +52,7 @@ class FeedlyAuthActivity : AppCompatActivity() {
 
         viewModel.startLocalCallbackServer()
 
-        val url = Uri.parse(FeedlyRemoteRepository().getAuthenticationUrl())
+        val url = Uri.parse(viewModel.getAuthenticationUrl())
         val customTabsIntent = CustomTabsIntent.Builder().build()
         customTabsIntent.launchUrl(this, url)
     }

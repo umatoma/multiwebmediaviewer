@@ -25,13 +25,17 @@ class FeedlyRemoteRepository {
             .build()
     }
 
+    fun getRedirectUrl(): String {
+        return "http://localhost:8080"
+    }
+
     fun getAuthenticationUrl(): String {
         return "https://cloud.feedly.com/v3/auth/auth"
             .toHttpUrl()
             .newBuilder()
             .addQueryParameter("response_type", "code")
             .addQueryParameter("client_id", "feedly")
-            .addQueryParameter("redirect_uri", "http://localhost:8080")
+            .addQueryParameter("redirect_uri", getRedirectUrl())
             .addQueryParameter("scope", "https://cloud.feedly.com/subscriptions")
             .addQueryParameter("state", "state.passed.in")
             .build()
@@ -43,7 +47,7 @@ class FeedlyRemoteRepository {
             "code" to code,
             "client_id" to "feedly",
             "client_secret" to "0XP4XQ07VVMDWBKUHTJM4WUQ",
-            "redirect_uri" to "http://localhost:8080",
+            "redirect_uri" to getRedirectUrl(),
             "state" to "state.passed.in",
             "grant_type" to "authorization_code"
         )

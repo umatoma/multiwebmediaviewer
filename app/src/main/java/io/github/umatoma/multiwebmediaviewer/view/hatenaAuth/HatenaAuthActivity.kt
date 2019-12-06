@@ -1,10 +1,10 @@
 package io.github.umatoma.multiwebmediaviewer.view.hatenaAuth
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
@@ -27,7 +27,8 @@ class HatenaAuthActivity : AppCompatActivity() {
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
         })
         viewModel.authenticationUrlLiveData.observe(this, Observer {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
+            val customTabsIntent = CustomTabsIntent.Builder().build()
+            customTabsIntent.launchUrl(this, Uri.parse(it))
         })
         viewModel.accessTokenLiveData.observe(this, Observer {
             HomeActivity.startActivity(this)
