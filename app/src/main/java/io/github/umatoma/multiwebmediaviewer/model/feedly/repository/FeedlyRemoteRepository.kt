@@ -2,19 +2,21 @@ package io.github.umatoma.multiwebmediaviewer.model.feedly.repository
 
 import com.google.gson.Gson
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyAccessToken
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRemoteRepository
+import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCategory
+import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.MediaType
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 
-class FeedlyRemoteRepository {
+class FeedlyRemoteRepository(
+    private val localRepository: FeedlyLocalRepository
+) {
 
     private val okHttpClient: OkHttpClient by lazy {
         val loggingInterceptor = HttpLoggingInterceptor().also {
@@ -64,6 +66,26 @@ class FeedlyRemoteRepository {
         return@withContext FeedlyAccessToken.fromJSON(body)
     }
 
+    suspend fun getStreamContents(category: FeedlyCategory, prevStream: FeedlyStream?): FeedlyStream = withContext(Dispatchers.IO) {
+        val count = 30
+        val continuation = prevStream?.continuation
+        val requestUrl = "https://cloud.feedly.com/v3/streams/contents"
+            .toHttpUrl()
+            .newBuilder()
+            .addQueryParameter("streamId", category.id)
+            .addQueryParameter("count", count.toString())
+            .addQueryParameter("continuation", continuation)
+            .build()
+
+        val request = Request.Builder()
+            .url(requestUrl)
+            .build()
+
+        val body = executeAuthRequest(request)
+
+        return@withContext FeedlyStream.fromJSON(body)
+    }
+
     private fun executeRequest(request: Request): String {
         val response = okHttpClient
             .newCall(request)
@@ -78,5 +100,13 @@ class FeedlyRemoteRepository {
         }
 
         return response.body!!.string()
+    }
+
+    private fun executeAuthRequest(request: Request): String {
+        val accessToken = localRepository.getAccessToken()
+        val newRequest = request.newBuilder()
+            .addHeader("Authorization", "Bearer ${accessToken.accessToken}")
+            .build()
+        return executeRequest(newRequest)
     }
 }

@@ -23,7 +23,7 @@ class FeedlyAuthViewModel(
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             val localRepository = FeedlyLocalRepository(context)
-            val remoteRepository = FeedlyRemoteRepository()
+            val remoteRepository = FeedlyRemoteRepository(localRepository)
 
             return modelClass
                 .getConstructor(

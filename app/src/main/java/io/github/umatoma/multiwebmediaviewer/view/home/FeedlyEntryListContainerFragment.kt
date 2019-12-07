@@ -36,15 +36,19 @@ class FeedlyEntryListContainerFragment : Fragment() {
             .of(requireActivity(), homeViewModelFactory)
             .get(HomeViewModel::class.java)
 
+        viewPagerFeedlyEntryList.adapter = FeedlyEntryListPagerAdapter(requireFragmentManager())
+
         btnFeedlySignIn.setOnClickListener {
             FeedlyAuthActivity.startActivity(requireContext())
         }
 
         homeViewModel.isSignedInFeedlyLiveData.observe(viewLifecycleOwner, Observer {
             if (it) {
-                btnFeedlySignIn.visibility = View.GONE
+                layoutFeedlyEntryListContent.visibility = View.VISIBLE
+                layoutFeedlySignInContent.visibility = View.GONE
             } else {
-                btnFeedlySignIn.visibility = View.VISIBLE
+                layoutFeedlyEntryListContent.visibility = View.GONE
+                layoutFeedlySignInContent.visibility = View.VISIBLE
             }
         })
     }
