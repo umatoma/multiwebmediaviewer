@@ -14,13 +14,22 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view.feedlyAuth.FeedlyAuthActivity"></activity>
-        <activity android:name=".view.hatenaEntry.HatenaEntryActivity" />
+        <activity
+            android:name=".view.feedlyAuth.FeedlyAuthActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.hatenaEntry.HatenaEntryActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.home.HomeActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".view.hatenaAuth.HatenaAuthActivity" />
-        <activity android:name=".view.start.StartActivity">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.hatenaAuth.HatenaAuthActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.start.StartActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

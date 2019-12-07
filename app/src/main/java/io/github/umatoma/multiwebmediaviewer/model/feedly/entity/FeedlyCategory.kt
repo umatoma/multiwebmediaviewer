@@ -2,7 +2,7 @@ package io.github.umatoma.multiwebmediaviewer.model.feedly.entity
 
 import java.io.Serializable
 
-class FeedlyCategory(
+open class FeedlyCategory(
     val id: String,
     val label: String,
     val description: String? = null

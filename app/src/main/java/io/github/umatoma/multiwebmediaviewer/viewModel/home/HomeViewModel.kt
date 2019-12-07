@@ -1,9 +1,12 @@
 package io.github.umatoma.multiwebmediaviewer.viewModel.home
 
 import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCategory
 import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyLocalRepository
 import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaLocalRepository
 
@@ -30,10 +33,18 @@ class HomeViewModel(
                     feedlyLocalRepository
                 )
         }
+
+        fun create(activity: FragmentActivity): HomeViewModel {
+            return ViewModelProviders.of(activity, this)
+                .get(HomeViewModel::class.java)
+        }
     }
 
     val isSignedInHatenaLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isSignedInFeedlyLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val feedlyEntryListCategoryLiveData: MutableLiveData<FeedlyCategory> by lazy {
+        MutableLiveData(createCategoryAll())
+    }
 
     fun signOutHatena() {
         hatenaLocalRepository.signOut()
@@ -45,11 +56,23 @@ class HomeViewModel(
         fetchIsSignedInFeedly()
     }
 
+    fun setFeedlyEntryListCategory(category: FeedlyCategory) {
+        feedlyEntryListCategoryLiveData.postValue(category)
+    }
+
     private fun fetchIsSignedInHatena() {
         isSignedInHatenaLiveData.postValue(hatenaLocalRepository.isSignedIn())
     }
 
     private fun fetchIsSignedInFeedly() {
         isSignedInFeedlyLiveData.postValue(feedlyLocalRepository.isSignedIn())
+    }
+
+    private fun createCategoryAll(): FeedlyCategory {
+        val accessToken = feedlyLocalRepository.getAccessToken()
+        return FeedlyCategory.fromUserIdAndLabel(
+            accessToken.id,
+            FeedlyCategory.Label.GLOBAL_ALL
+        )
     }
 }

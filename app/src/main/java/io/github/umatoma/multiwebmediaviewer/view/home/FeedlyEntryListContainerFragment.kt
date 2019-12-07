@@ -31,12 +31,10 @@ class FeedlyEntryListContainerFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val homeViewModelFactory = HomeViewModel.Factory(requireContext())
-        val homeViewModel = ViewModelProviders
-            .of(requireActivity(), homeViewModelFactory)
-            .get(HomeViewModel::class.java)
+        val homeViewModel = HomeViewModel.Factory(requireContext()).create(requireActivity())
+        val pagerAdapter = FeedlyEntryListPagerAdapter(requireFragmentManager())
 
-        viewPagerFeedlyEntryList.adapter = FeedlyEntryListPagerAdapter(requireFragmentManager())
+        viewPagerFeedlyEntryList.adapter = pagerAdapter
 
         btnFeedlySignIn.setOnClickListener {
             FeedlyAuthActivity.startActivity(requireContext())
@@ -50,6 +48,10 @@ class FeedlyEntryListContainerFragment : Fragment() {
                 layoutFeedlyEntryListContent.visibility = View.GONE
                 layoutFeedlySignInContent.visibility = View.VISIBLE
             }
+        })
+
+        homeViewModel.feedlyEntryListCategoryLiveData.observe(viewLifecycleOwner, Observer {
+            viewPagerFeedlyEntryList.currentItem = FeedlyEntryListPagerAdapter.POSITION_FEEDS
         })
     }
 }

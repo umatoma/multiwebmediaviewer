@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.viewModel.home.FeedlyEntryListViewModel
+import io.github.umatoma.multiwebmediaviewer.viewModel.home.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_feedly_entry_list.*
 
 
@@ -36,14 +37,15 @@ class FeedlyEntryListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val viewModelFactory = FeedlyEntryListViewModel.Factory(requireContext())
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(FeedlyEntryListViewModel::class.java)
+        val viewModel = FeedlyEntryListViewModel.Factory(requireContext()).create(this)
+        val homeViewModel = HomeViewModel.Factory(requireContext()).create(requireActivity())
 
         val entryListAdapter = FeedlyEntryListAdapter().also {
             it.onClickEntry { entry ->
-                val customTabsIntent = CustomTabsIntent.Builder().build()
-                customTabsIntent.launchUrl(requireContext(), Uri.parse(entry.canonicalUrl))
+                entry.canonicalUrl?.also { canonicalUrl ->
+                    val customTabsIntent = CustomTabsIntent.Builder().build()
+                    customTabsIntent.launchUrl(requireContext(), Uri.parse(canonicalUrl))
+                }
             }
             it.onClickFooter {
                 viewModel.fetchFeedlyEntryListOnNextPage()
@@ -51,10 +53,7 @@ class FeedlyEntryListFragment : Fragment() {
         }
 
         recyclerViewFeedlyEntryList.also {
-            val divider = DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
+            val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
             it.setHasFixedSize(true)
             it.addItemDecoration(divider)
             it.layoutManager = LinearLayoutManager(requireContext())
@@ -67,6 +66,10 @@ class FeedlyEntryListFragment : Fragment() {
 
         viewModel.feedlyEntryListLiveData.observe(viewLifecycleOwner, Observer {
             entryListAdapter.setEntryList(it)
+        })
+
+        homeViewModel.feedlyEntryListCategoryLiveData.observe(viewLifecycleOwner, Observer {
+            viewModel.setCategory(it)
         })
 
         viewModel.fetchFeedlyEntryList()

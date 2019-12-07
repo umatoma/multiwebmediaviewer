@@ -15,9 +15,7 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
     class HeaderItem(val category: FeedlyCategory) : Item<GroupieViewHolder>() {
 
-        override fun getLayout(): Int {
-            return R.layout.adapter_feedly_entry_list_header_item
-        }
+        override fun getLayout(): Int = R.layout.adapter_feedly_entry_list_header_item
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             viewHolder.itemView.also {
@@ -28,9 +26,7 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
     class EntryItem(val entry: FeedlyEntry) : Item<GroupieViewHolder>() {
 
-        override fun getLayout(): Int {
-            return R.layout.adapter_feedly_entry_list_item
-        }
+        override fun getLayout(): Int = R.layout.adapter_feedly_entry_list_item
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             viewHolder.itemView.also {
@@ -49,9 +45,7 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
     class FooterItem() : Item<GroupieViewHolder>() {
 
-        override fun getLayout(): Int {
-            return R.layout.adapter_feedly_entry_list_footer_item
-        }
+        override fun getLayout(): Int = R.layout.adapter_feedly_entry_list_footer_item
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {}
     }

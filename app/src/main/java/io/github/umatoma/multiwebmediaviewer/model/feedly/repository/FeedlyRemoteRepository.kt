@@ -3,6 +3,7 @@ package io.github.umatoma.multiwebmediaviewer.model.feedly.repository
 import com.google.gson.Gson
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyAccessToken
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCategory
+import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCollection
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -84,6 +85,17 @@ class FeedlyRemoteRepository(
         val body = executeAuthRequest(request)
 
         return@withContext FeedlyStream.fromJSON(body)
+    }
+
+    suspend fun getCollections(): List<FeedlyCollection> = withContext(Dispatchers.IO) {
+        val requestUrl = "https://cloud.feedly.com/v3/collections"
+        val request = Request.Builder()
+            .url(requestUrl)
+            .build()
+
+        val body = executeAuthRequest(request)
+
+        return@withContext FeedlyCollection.fromListJSON(body)
     }
 
     private fun executeRequest(request: Request): String {
