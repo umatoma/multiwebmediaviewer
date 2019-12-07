@@ -50,6 +50,7 @@ class FeedlyCategoryListViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             val categoryList =
                 listOf(createCategoryAll()) + feedlyRemoteRepository.getCollections()
+            isFetchingLiveData.postValue(false)
             feedlyCategoryListLiveData.postValue(categoryList)
         }
         isFetchingLiveData.postValue(true)

@@ -55,6 +55,14 @@ class FeedlyCategoryListFragment : Fragment() {
             it.adapter = categoryListAdapter
         }
 
+        swipeRefreshFeedlyCategoryList.setOnRefreshListener {
+            viewModel.fetchFeedlyCategoryList()
+        }
+
+        viewModel.isFetchingLiveData.observe(viewLifecycleOwner, Observer {
+            swipeRefreshFeedlyCategoryList.isRefreshing = it
+        })
+
         viewModel.feedlyCategoryListLiveData.observe(viewLifecycleOwner, Observer {
             categoryListAdapter.setCategoryList(it)
         })

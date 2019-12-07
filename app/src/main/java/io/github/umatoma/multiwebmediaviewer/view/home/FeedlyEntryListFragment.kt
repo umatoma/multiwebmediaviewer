@@ -60,6 +60,14 @@ class FeedlyEntryListFragment : Fragment() {
             it.adapter = entryListAdapter
         }
 
+        swipeRefreshFeedlyEntryList.setOnRefreshListener {
+            viewModel.fetchFeedlyEntryList()
+        }
+
+        viewModel.isFetchingLiveData.observe(viewLifecycleOwner, Observer {
+            swipeRefreshFeedlyEntryList.isRefreshing = it
+        })
+
         viewModel.feedlyCategoryLiveData.observe(viewLifecycleOwner, Observer {
             entryListAdapter.setCategory(it)
         })
