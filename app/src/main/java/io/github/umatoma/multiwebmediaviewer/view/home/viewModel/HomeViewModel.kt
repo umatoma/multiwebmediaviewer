@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.viewModel.home
+package io.github.umatoma.multiwebmediaviewer.view.home.viewModel
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCategory
-import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyLocalRepository
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaLocalRepository
+import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRepository
+import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRepository
 
 class HomeViewModel(
-    private val hatenaLocalRepository: HatenaLocalRepository,
-    private val feedlyLocalRepository: FeedlyLocalRepository
+    private val hatenaRepository: HatenaRepository,
+    private val feedlyRepository: FeedlyRepository
 ): ViewModel() {
 
     class Factory(
@@ -20,17 +20,14 @@ class HomeViewModel(
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val hatenaLocalRepository = HatenaLocalRepository(context)
-            val feedlyLocalRepository = FeedlyLocalRepository(context)
-
             return modelClass
                 .getConstructor(
-                    HatenaLocalRepository::class.java,
-                    FeedlyLocalRepository::class.java
+                    HatenaRepository::class.java,
+                    FeedlyRepository::class.java
                 )
                 .newInstance(
-                    hatenaLocalRepository,
-                    feedlyLocalRepository
+                    HatenaRepository.Factory(context).create(),
+                    FeedlyRepository.Factory(context).create()
                 )
         }
 
@@ -45,12 +42,12 @@ class HomeViewModel(
     val feedlyEntryListCategoryLiveData: MutableLiveData<FeedlyCategory> = MutableLiveData()
 
     fun signOutHatena() {
-        hatenaLocalRepository.signOut()
+        hatenaRepository.signOut()
         fetchIsSignedInHatena()
     }
 
     fun signOutFeedly() {
-        feedlyLocalRepository.signOut()
+        feedlyRepository.signOut()
         fetchIsSignedInFeedly()
     }
 
@@ -64,10 +61,10 @@ class HomeViewModel(
     }
 
     private fun fetchIsSignedInHatena() {
-        isSignedInHatenaLiveData.postValue(hatenaLocalRepository.isSignedIn())
+        isSignedInHatenaLiveData.postValue(hatenaRepository.isSignedIn())
     }
 
     private fun fetchIsSignedInFeedly() {
-        isSignedInFeedlyLiveData.postValue(feedlyLocalRepository.isSignedIn())
+        isSignedInFeedlyLiveData.postValue(feedlyRepository.isSignedIn())
     }
 }

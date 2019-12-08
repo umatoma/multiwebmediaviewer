@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
-import io.github.umatoma.multiwebmediaviewer.viewModel.home.HomeViewModel
+import io.github.umatoma.multiwebmediaviewer.view.home.fragment.FeedlyEntryListContainerFragment
+import io.github.umatoma.multiwebmediaviewer.view.home.fragment.HatenaEntryListContainerFragment
+import io.github.umatoma.multiwebmediaviewer.view.home.fragment.SettingsFragment
+import io.github.umatoma.multiwebmediaviewer.view.home.viewModel.HomeViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -33,9 +36,12 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(HomeViewModel::class.java)
 
-        hatenaEntryListContainerFragment = HatenaEntryListContainerFragment()
-        feedlyEntryListContainerFragment = FeedlyEntryListContainerFragment()
-        settingsFragment = SettingsFragment()
+        hatenaEntryListContainerFragment =
+            HatenaEntryListContainerFragment()
+        feedlyEntryListContainerFragment =
+            FeedlyEntryListContainerFragment()
+        settingsFragment =
+            SettingsFragment()
 
         fragmentArray = arrayOf(
             hatenaEntryListContainerFragment,

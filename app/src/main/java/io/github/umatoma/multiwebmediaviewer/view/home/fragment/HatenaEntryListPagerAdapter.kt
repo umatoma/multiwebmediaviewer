@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -20,8 +20,14 @@ class HatenaEntryListPagerAdapter(fm: FragmentManager) :
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> HatenaEntryListFragment.newInstance(HatenaEntry.Kind.NEW, HatenaEntry.Category.ALL)
-            1 -> HatenaEntryListFragment.newInstance(HatenaEntry.Kind.HOT, HatenaEntry.Category.ALL)
+            0 -> HatenaEntryListFragment.newInstance(
+                HatenaEntry.Kind.NEW,
+                HatenaEntry.Category.ALL
+            )
+            1 -> HatenaEntryListFragment.newInstance(
+                HatenaEntry.Kind.HOT,
+                HatenaEntry.Category.ALL
+            )
             else -> throw Exception("Invalid page position")
         }
     }

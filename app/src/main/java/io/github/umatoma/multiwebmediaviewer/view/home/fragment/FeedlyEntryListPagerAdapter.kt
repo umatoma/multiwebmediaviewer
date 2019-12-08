@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

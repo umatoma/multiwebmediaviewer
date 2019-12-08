@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry
+package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -22,7 +22,8 @@ class HatenaEntryFragment : Fragment() {
             val bundle = Bundle().also {
                 it.putSerializable(KEY_ENTRY, entry)
             }
-            return HatenaEntryFragment().also {
+            return HatenaEntryFragment()
+                .also {
                 it.arguments = bundle
             }
         }

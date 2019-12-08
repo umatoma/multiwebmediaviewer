@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.view.home.HomeActivity
-import io.github.umatoma.multiwebmediaviewer.viewModel.hatenaAuth.HatenaAuthViewModel
+import io.github.umatoma.multiwebmediaviewer.view.hatenaAuth.viewModel.HatenaAuthViewModel
 import kotlinx.android.synthetic.main.activity_hatena_auth.*
 
 class HatenaAuthActivity : AppCompatActivity() {

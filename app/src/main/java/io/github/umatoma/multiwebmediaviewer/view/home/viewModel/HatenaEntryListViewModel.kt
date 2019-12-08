@@ -1,12 +1,11 @@
-package io.github.umatoma.multiwebmediaviewer.viewModel.home
+package io.github.umatoma.multiwebmediaviewer.view.home.viewModel
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaLocalRepository
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRemoteRepository
+import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 class HatenaEntryListViewModel(
     private val entryKind: HatenaEntry.Kind,
     private val entryCategory: HatenaEntry.Category,
-    private val hatenaRemoteRepository: HatenaRemoteRepository
+    private val hatenaRepository: HatenaRepository
 ) : ViewModel() {
 
     class Factory(
@@ -24,19 +23,16 @@ class HatenaEntryListViewModel(
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val hatenaLocalRepository = HatenaLocalRepository(context)
-            val hatenaRemoteRepository = HatenaRemoteRepository(hatenaLocalRepository)
-
             return modelClass
                 .getConstructor(
                     HatenaEntry.Kind::class.java,
                     HatenaEntry.Category::class.java,
-                    HatenaRemoteRepository::class.java
+                    HatenaRepository::class.java
                 )
                 .newInstance(
                     entryKind,
                     entryCategory,
-                    hatenaRemoteRepository
+                    HatenaRepository.Factory(context).create()
                 )
         }
     }
@@ -50,10 +46,10 @@ class HatenaEntryListViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             val entryList = when (entryKind) {
                 HatenaEntry.Kind.HOT -> {
-                    hatenaRemoteRepository.getHotEntryList(entryCategory, pageNumber)
+                    hatenaRepository.getHotEntryList(entryCategory, pageNumber)
                 }
                 HatenaEntry.Kind.NEW -> {
-                    hatenaRemoteRepository.getNewEntryList(entryCategory, pageNumber)
+                    hatenaRepository.getNewEntryList(entryCategory, pageNumber)
                 }
             }
 

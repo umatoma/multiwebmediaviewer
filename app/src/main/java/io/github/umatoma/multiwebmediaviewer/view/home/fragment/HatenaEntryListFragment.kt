@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 
 import android.os.Bundle
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
 import io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.HatenaEntryActivity
-import io.github.umatoma.multiwebmediaviewer.viewModel.home.HatenaEntryListViewModel
+import io.github.umatoma.multiwebmediaviewer.view.home.viewModel.HatenaEntryListViewModel
 import kotlinx.android.synthetic.main.fragment_hatena_entry_list.*
 
 class HatenaEntryListFragment : Fragment() {
@@ -30,7 +30,8 @@ class HatenaEntryListFragment : Fragment() {
                 it.putSerializable(KEY_ENTRY_TYPE, kind)
                 it.putSerializable(KEY_ENTRY_CATEGORY, category)
             }
-            return HatenaEntryListFragment().also {
+            return HatenaEntryListFragment()
+                .also {
                 it.arguments = bundle
             }
         }
@@ -57,7 +58,8 @@ class HatenaEntryListFragment : Fragment() {
             .of(this, viewModelFactory)
             .get(HatenaEntryListViewModel::class.java)
 
-        val entryListAdapter = HatenaEntryListAdapter().also {
+        val entryListAdapter = HatenaEntryListAdapter()
+            .also {
             it.onClickEntry { entry ->
                 HatenaEntryActivity.startActivity(requireContext(), entry)
             }

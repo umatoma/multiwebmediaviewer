@@ -1,29 +1,29 @@
-package io.github.umatoma.multiwebmediaviewer.model.hatena.repository
+package io.github.umatoma.multiwebmediaviewer.model.feedly.repository
 
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaAccessToken
+import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyAccessToken
 import java.lang.Exception
 
-class HatenaLocalRepository(context: Context) {
+class FeedlyLocalDataSource(private val context: Context) {
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     companion object {
-        const val KEY_ACCESS_TOKEN = "KEY_HATENA_ACCESS_TOKEN"
+        const val KEY_ACCESS_TOKEN = "KEY_FEEDLY_ACCESS_TOKEN"
     }
 
-    fun putAccessToken(accessToken: HatenaAccessToken) {
+    fun putAccessToken(accessToken: FeedlyAccessToken) {
         sharedPreferences.edit {
             putString(KEY_ACCESS_TOKEN, accessToken.toJSON())
         }
     }
 
-    fun getAccessToken(): HatenaAccessToken {
+    fun getAccessToken(): FeedlyAccessToken {
         val accessTokenString = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
         accessTokenString?.let {
-            return HatenaAccessToken.fromJSON(it)
+            return FeedlyAccessToken.fromJSON(it)
         }
         throw Exception("Failed to get access token.")
     }

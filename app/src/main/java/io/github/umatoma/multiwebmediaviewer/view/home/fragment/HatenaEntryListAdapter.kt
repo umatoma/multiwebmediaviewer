@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
@@ -41,7 +41,8 @@ class HatenaEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {}
     }
 
-    private val footerItem = FooterItem()
+    private val footerItem =
+        FooterItem()
     private val entryItemListSection = Section()
     private var onClickEntryListener: ((HatenaEntry) -> Unit)? = null
     private var onClickFooterListener: (() -> Unit)? = null
@@ -66,7 +67,11 @@ class HatenaEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
     fun setEntryList(entryList: List<HatenaEntry>) {
         entryItemListSection.clear()
-        entryItemListSection.addAll(entryList.map { EntryItem(it) })
+        entryItemListSection.addAll(entryList.map {
+            EntryItem(
+                it
+            )
+        })
 
         if (entryList.isNotEmpty()) {
             entryItemListSection.setFooter(footerItem)

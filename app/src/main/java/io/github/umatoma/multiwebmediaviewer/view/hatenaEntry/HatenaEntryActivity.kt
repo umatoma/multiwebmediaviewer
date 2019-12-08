@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
+import io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.fragment.HatenaBookmarkListFragment
+import io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.fragment.HatenaEntryFragment
 import kotlinx.android.synthetic.main.activity_hatena_entry.*
 
 class HatenaEntryActivity : AppCompatActivity() {

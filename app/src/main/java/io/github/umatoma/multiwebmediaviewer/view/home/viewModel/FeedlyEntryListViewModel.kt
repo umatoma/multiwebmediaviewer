@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.viewModel.home
+package io.github.umatoma.multiwebmediaviewer.view.home.viewModel
 
 import android.content.Context
 import androidx.fragment.app.Fragment
@@ -9,15 +9,13 @@ import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCategory
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyEntry
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyStream
-import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyLocalRepository
-import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRemoteRepository
+import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FeedlyEntryListViewModel(
-    private val feedlyLocalRepository: FeedlyLocalRepository,
-    private val feedlyRemoteRepository: FeedlyRemoteRepository
+    private val feedlyRepository: FeedlyRepository
 ) : ViewModel() {
 
     class Factory(
@@ -25,18 +23,9 @@ class FeedlyEntryListViewModel(
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val feedlyLocalRepository = FeedlyLocalRepository(context)
-            val feedlyRemoteRepository = FeedlyRemoteRepository(feedlyLocalRepository)
-
             return modelClass
-                .getConstructor(
-                    FeedlyLocalRepository::class.java,
-                    FeedlyRemoteRepository::class.java
-                )
-                .newInstance(
-                    feedlyLocalRepository,
-                    feedlyRemoteRepository
-                )
+                .getConstructor(FeedlyRepository::class.java)
+                .newInstance(FeedlyRepository.Factory(context).create())
         }
 
         fun create(fragment: Fragment): FeedlyEntryListViewModel {
@@ -56,7 +45,7 @@ class FeedlyEntryListViewModel(
     fun fetchFeedlyEntryList(prevStream: FeedlyStream? = null) {
         CoroutineScope(Dispatchers.IO).launch {
             val category = feedlyCategoryLiveData.value!!
-            val stream = feedlyRemoteRepository.getStreamContents(category, prevStream)
+            val stream = feedlyRepository.getStreamContents(category, prevStream)
             val entryList = stream.items
 
             isFetchingLiveData.postValue(false)
@@ -82,7 +71,7 @@ class FeedlyEntryListViewModel(
     }
 
     private fun createCategoryAll(): FeedlyCategory {
-        val accessToken = feedlyLocalRepository.getAccessToken()
+        val accessToken = feedlyRepository.getAccessToken()
         return FeedlyCategory.fromUserIdAndLabel(
             accessToken.id,
             FeedlyCategory.Label.GLOBAL_ALL

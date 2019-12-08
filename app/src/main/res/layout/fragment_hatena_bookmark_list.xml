@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.hatenaEntry.HatenaBookmarkListFragment">
+    tools:context=".view.hatenaEntry.fragment.HatenaBookmarkListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHatenaBookmarkList"

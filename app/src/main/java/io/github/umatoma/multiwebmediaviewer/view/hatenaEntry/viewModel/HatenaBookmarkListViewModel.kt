@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.viewModel.hatenaEntry
+package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.viewModel
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
@@ -6,15 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaBookmark
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaLocalRepository
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRemoteRepository
+import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HatenaBookmarkListViewModel(
     private val entry: HatenaEntry,
-    private val remoteRepository: HatenaRemoteRepository
+    private val hatenaRepository: HatenaRepository
 ) : ViewModel() {
 
     class Factory(
@@ -23,12 +22,9 @@ class HatenaBookmarkListViewModel(
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val localRepository = HatenaLocalRepository(context)
-            val remoteRepository = HatenaRemoteRepository(localRepository)
-
             return modelClass
-                .getConstructor(HatenaEntry::class.java, HatenaRemoteRepository::class.java)
-                .newInstance(entry, remoteRepository)
+                .getConstructor(HatenaEntry::class.java, HatenaRepository::class.java)
+                .newInstance(entry, HatenaRepository.Factory(context).create())
         }
     }
 
@@ -37,7 +33,7 @@ class HatenaBookmarkListViewModel(
     fun fetchBookmarkList() {
         if (bookmarkListLiveData.value == null) {
             CoroutineScope(Dispatchers.IO).launch {
-                val entryWithBookmarkList = remoteRepository.getEntry(entry.url)
+                val entryWithBookmarkList = hatenaRepository.getEntry(entry.url)
                 bookmarkListLiveData.postValue(entryWithBookmarkList.bookmarkList)
             }
         } else {

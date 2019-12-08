@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.umatoma.multiwebmediaviewer.R
-import io.github.umatoma.multiwebmediaviewer.viewModel.home.FeedlyCategoryListViewModel
-import io.github.umatoma.multiwebmediaviewer.viewModel.home.HomeViewModel
+import io.github.umatoma.multiwebmediaviewer.view.home.viewModel.FeedlyCategoryListViewModel
+import io.github.umatoma.multiwebmediaviewer.view.home.viewModel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_feedly_category_list.*
 
 
@@ -41,7 +41,8 @@ class FeedlyCategoryListFragment : Fragment() {
             .Factory(requireContext())
             .create(requireActivity())
 
-        val categoryListAdapter = FeedlyCategoryListAdapter().also {
+        val categoryListAdapter = FeedlyCategoryListAdapter()
+            .also {
             it.onClickCategory { category ->
                 homeViewModel.setFeedlyEntryListCategory(category)
             }

@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry
+package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.fragment
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -22,7 +22,9 @@ class HatenaBookmarkListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.adapter_hatena_bookmark_list_item, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(
+            view
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

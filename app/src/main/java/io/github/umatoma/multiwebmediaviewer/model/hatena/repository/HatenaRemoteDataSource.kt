@@ -17,8 +17,8 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 
 
-class HatenaRemoteRepository(
-    private val localRepository: HatenaLocalRepository
+class HatenaRemoteDataSource(
+    private val getLocalAccessToken: () -> HatenaAccessToken
 ) {
 
     companion object {
@@ -131,44 +131,6 @@ class HatenaRemoteRepository(
             )
         }
 
-    suspend fun getUser() = withContext(Dispatchers.IO) {
-        val accessToken = localRepository.getAccessToken()
-
-        val request = Request.Builder()
-            .url("https://bookmark.hatenaapis.com/rest/1/my")
-            .build()
-
-        val oAuthToken = OAuth1AuthHeaderUtil.OAuthToken(
-            accessToken.token,
-            accessToken.tokenSecret
-        )
-        val response = okHttpClient
-            .newCall(oauth1Interceptor.setAuthHeader(request, oAuthToken))
-            .execute()
-
-        if (!response.isSuccessful) {
-            throw IOException("Unexpected code ${response.code}")
-        }
-
-        return@withContext HatenaUser.fromJSON(response.body!!.string())
-    }
-
-    suspend fun getMyEntry(url: String) = withContext(Dispatchers.IO) {
-        val requestUrl = "https://bookmark.hatenaapis.com/rest/1/entry"
-            .toHttpUrl()
-            .newBuilder()
-            .addQueryParameter("url", url)
-            .build()
-
-        val request = Request.Builder()
-            .url(requestUrl)
-            .build()
-
-        val body = executeAuthRequest(request)
-
-        // TODO: parse body and return value
-    }
-
     suspend fun getEntry(url: String): HatenaEntry = withContext(Dispatchers.IO) {
         val requestUrl = "https://b.hatena.ne.jp/entry/json/${url}"
 
@@ -229,7 +191,7 @@ class HatenaRemoteRepository(
         }
 
     private fun executeAuthRequest(request: Request): String {
-        val accessToken = localRepository.getAccessToken()
+        val accessToken = getLocalAccessToken()
         val oAuthToken = OAuth1AuthHeaderUtil.OAuthToken(
             accessToken.token,
             accessToken.tokenSecret

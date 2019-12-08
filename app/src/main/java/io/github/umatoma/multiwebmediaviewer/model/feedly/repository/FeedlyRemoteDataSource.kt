@@ -15,8 +15,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 
-class FeedlyRemoteRepository(
-    private val localRepository: FeedlyLocalRepository
+class FeedlyRemoteDataSource(
+    private val getLocalAccessToken: () -> FeedlyAccessToken
 ) {
 
     private val okHttpClient: OkHttpClient by lazy {
@@ -115,7 +115,7 @@ class FeedlyRemoteRepository(
     }
 
     private fun executeAuthRequest(request: Request): String {
-        val accessToken = localRepository.getAccessToken()
+        val accessToken = getLocalAccessToken()
         val newRequest = request.newBuilder()
             .addHeader("Authorization", "Bearer ${accessToken.accessToken}")
             .build()

@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry
+package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.fragment
 
 
 import android.os.Bundle
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
-import io.github.umatoma.multiwebmediaviewer.viewModel.hatenaEntry.HatenaBookmarkListViewModel
+import io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.viewModel.HatenaBookmarkListViewModel
 import kotlinx.android.synthetic.main.fragment_hatena_bookmark_list.*
 
 
@@ -27,7 +27,8 @@ class HatenaBookmarkListFragment : Fragment() {
             val bundle = Bundle().also {
                 it.putSerializable(KEY_ENTRY, entry)
             }
-            return HatenaBookmarkListFragment().also {
+            return HatenaBookmarkListFragment()
+                .also {
                 it.arguments = bundle
             }
         }
@@ -44,7 +45,10 @@ class HatenaBookmarkListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val entry = requireArguments().getSerializable(KEY_ENTRY) as HatenaEntry
-        val bookmarkListAdapter = HatenaBookmarkListAdapter(requireContext())
+        val bookmarkListAdapter =
+            HatenaBookmarkListAdapter(
+                requireContext()
+            )
 
         val viewModelFactory = HatenaBookmarkListViewModel.Factory(requireContext(), entry)
         val viewModel = ViewModelProviders.of(this, viewModelFactory)

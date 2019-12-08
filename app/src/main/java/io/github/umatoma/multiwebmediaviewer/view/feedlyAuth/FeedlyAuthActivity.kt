@@ -3,19 +3,15 @@ package io.github.umatoma.multiwebmediaviewer.view.feedlyAuth
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import fi.iki.elonen.NanoHTTPD
 import io.github.umatoma.multiwebmediaviewer.R
-import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRemoteRepository
 import io.github.umatoma.multiwebmediaviewer.view.home.HomeActivity
-import io.github.umatoma.multiwebmediaviewer.viewModel.feedlyAuth.FeedlyAuthViewModel
+import io.github.umatoma.multiwebmediaviewer.view.feedlyAuth.viewModel.FeedlyAuthViewModel
 import kotlinx.android.synthetic.main.activity_feedly_auth.*
 
 class FeedlyAuthActivity : AppCompatActivity() {

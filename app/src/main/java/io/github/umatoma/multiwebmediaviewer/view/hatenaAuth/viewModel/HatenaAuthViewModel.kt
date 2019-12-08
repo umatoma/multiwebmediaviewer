@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.viewModel.hatenaAuth
+package io.github.umatoma.multiwebmediaviewer.view.hatenaAuth.viewModel
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
@@ -6,27 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaAccessToken
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaRequestToken
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaLocalRepository
-import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRemoteRepository
+import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HatenaAuthViewModel(
-    private val remoteRepository: HatenaRemoteRepository,
-    private val localRepository: HatenaLocalRepository
+    private val hatenaRepository: HatenaRepository
 ) : ViewModel() {
 
     class Factory(
         private val context: Context
     ): ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val localRepository = HatenaLocalRepository(context)
-            val remoteRepository = HatenaRemoteRepository(localRepository)
-
             return modelClass
-                .getConstructor(HatenaRemoteRepository::class.java, HatenaLocalRepository::class.java)
-                .newInstance(remoteRepository, localRepository)
+                .getConstructor(HatenaRepository::class.java)
+                .newInstance(HatenaRepository.Factory(context).create())
         }
     }
 
@@ -39,8 +34,8 @@ class HatenaAuthViewModel(
     fun fetchAuthenticationUrl() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val token = remoteRepository.getRequestToken()
-                val authUrl = remoteRepository.getAuthenticationUrl(token)
+                val token = hatenaRepository.getRequestToken()
+                val authUrl = hatenaRepository.getAuthenticationUrl(token)
 
                 requestToken = token
 
@@ -55,9 +50,9 @@ class HatenaAuthViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val token = requestToken ?: throw Exception("Failed to fetch access token.")
-                val accessToken = remoteRepository.getAccessToken(token, verifier)
+                val accessToken = hatenaRepository.getAccessToken(token, verifier)
 
-                localRepository.putAccessToken(accessToken)
+                hatenaRepository.putAccessToken(accessToken)
                 accessTokenLiveData.postValue(accessToken)
             } catch (e: Exception) {
                 exceptionLiveData.postValue(e)

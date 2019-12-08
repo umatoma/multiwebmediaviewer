@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 
 import android.content.Context
@@ -8,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.view.feedlyAuth.FeedlyAuthActivity
-import io.github.umatoma.multiwebmediaviewer.viewModel.home.HomeViewModel
+import io.github.umatoma.multiwebmediaviewer.view.home.viewModel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_feedly_entry_list_container.*
 
 
@@ -32,7 +31,10 @@ class FeedlyEntryListContainerFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val homeViewModel = HomeViewModel.Factory(requireContext()).create(requireActivity())
-        val pagerAdapter = FeedlyEntryListPagerAdapter(requireFragmentManager())
+        val pagerAdapter =
+            FeedlyEntryListPagerAdapter(
+                requireFragmentManager()
+            )
 
         viewPagerFeedlyEntryList.adapter = pagerAdapter
 
@@ -51,7 +53,8 @@ class FeedlyEntryListContainerFragment : Fragment() {
         })
 
         homeViewModel.feedlyEntryListCategoryLiveData.observe(viewLifecycleOwner, Observer {
-            viewPagerFeedlyEntryList.currentItem = FeedlyEntryListPagerAdapter.POSITION_FEEDS
+            viewPagerFeedlyEntryList.currentItem =
+                FeedlyEntryListPagerAdapter.POSITION_FEEDS
         })
     }
 }

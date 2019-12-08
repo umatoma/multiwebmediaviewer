@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import io.github.umatoma.multiwebmediaviewer.R
 import io.github.umatoma.multiwebmediaviewer.view.hatenaAuth.HatenaAuthActivity
-import io.github.umatoma.multiwebmediaviewer.viewModel.home.HomeViewModel
+import io.github.umatoma.multiwebmediaviewer.view.home.viewModel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_hatena_entry_list_container.*
 
 class HatenaEntryListContainerFragment : Fragment() {
@@ -35,7 +35,10 @@ class HatenaEntryListContainerFragment : Fragment() {
             .of(requireActivity(), homeViewModelFactory)
             .get(HomeViewModel::class.java)
 
-        viewPagerHatenaEntryList.adapter = HatenaEntryListPagerAdapter(requireFragmentManager())
+        viewPagerHatenaEntryList.adapter =
+            HatenaEntryListPagerAdapter(
+                requireFragmentManager()
+            )
 
         btnHatenaSignIn.setOnClickListener {
             startActivity(Intent(requireContext(), HatenaAuthActivity::class.java))

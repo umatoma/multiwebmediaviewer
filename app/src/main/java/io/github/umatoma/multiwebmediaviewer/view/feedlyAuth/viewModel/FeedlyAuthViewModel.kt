@@ -1,36 +1,27 @@
-package io.github.umatoma.multiwebmediaviewer.viewModel.feedlyAuth
+package io.github.umatoma.multiwebmediaviewer.view.feedlyAuth.viewModel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import fi.iki.elonen.NanoHTTPD
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyAccessToken
-import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyLocalRepository
-import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRemoteRepository
+import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.URI
 
 class FeedlyAuthViewModel(
-    private val localRepository: FeedlyLocalRepository,
-    private val remoteRepository: FeedlyRemoteRepository
+    private val feedlyRepository: FeedlyRepository
 ) : ViewModel() {
 
     class Factory(val context: Context) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val localRepository = FeedlyLocalRepository(context)
-            val remoteRepository = FeedlyRemoteRepository(localRepository)
-
             return modelClass
-                .getConstructor(
-                    FeedlyLocalRepository::class.java,
-                    FeedlyRemoteRepository::class.java
-                )
-                .newInstance(localRepository, remoteRepository)
+                .getConstructor(FeedlyRepository::class.java)
+                .newInstance(FeedlyRepository.Factory(context).create())
         }
     }
 
@@ -60,8 +51,10 @@ class FeedlyAuthViewModel(
     }
 
     private val localCallbackServer: LocalCallbackServer by lazy {
-        val port = URI.create(remoteRepository.getRedirectUrl()).port
-        LocalCallbackServer(port)
+        val port = URI.create(feedlyRepository.getRedirectUrl()).port
+        LocalCallbackServer(
+            port
+        )
     }
 
     val exceptionLiveData: MutableLiveData<Exception> = MutableLiveData()
@@ -76,14 +69,14 @@ class FeedlyAuthViewModel(
     }
 
     fun getAuthenticationUrl(): String {
-        return remoteRepository.getAuthenticationUrl()
+        return feedlyRepository.getAuthenticationUrl()
     }
 
     fun fetchAccessToken(code: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val accessToken = remoteRepository.getAccessToken(code)
-                localRepository.putAccessToken(accessToken)
+                val accessToken = feedlyRepository.getAccessToken(code)
+                feedlyRepository.putAccessToken(accessToken)
                 accessTokenLiveData.postValue(accessToken)
             } catch (e: Exception) {
                 exceptionLiveData.postValue(e)

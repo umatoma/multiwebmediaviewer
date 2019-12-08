@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -39,7 +39,11 @@ class FeedlyCategoryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
     fun setCategoryList(categoryList: List<FeedlyCategory>) {
         categoryItemListSection.clear()
-        categoryItemListSection.addAll(categoryList.map { CategoryItem(it) })
+        categoryItemListSection.addAll(categoryList.map {
+            CategoryItem(
+                it
+            )
+        })
 
         notifyDataSetChanged()
     }

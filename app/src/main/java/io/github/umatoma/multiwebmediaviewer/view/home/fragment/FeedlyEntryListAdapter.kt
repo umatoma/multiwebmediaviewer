@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
@@ -50,7 +50,8 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {}
     }
 
-    private val footerItem = FooterItem()
+    private val footerItem =
+        FooterItem()
     private val entryItemListSection = Section()
     private var onClickEntryListener: ((FeedlyEntry) -> Unit)? = null
     private var onClickFooterListener: (() -> Unit)? = null
@@ -75,7 +76,11 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
     fun setEntryList(entryList: List<FeedlyEntry>) {
         entryItemListSection.clear()
-        entryItemListSection.addAll(entryList.map { EntryItem(it) })
+        entryItemListSection.addAll(entryList.map {
+            EntryItem(
+                it
+            )
+        })
 
         if (entryList.isNotEmpty()) {
             entryItemListSection.setFooter(footerItem)
@@ -85,6 +90,10 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
     }
 
     fun setCategory(category: FeedlyCategory) {
-        entryItemListSection.setHeader(HeaderItem(category))
+        entryItemListSection.setHeader(
+            HeaderItem(
+                category
+            )
+        )
     }
 }

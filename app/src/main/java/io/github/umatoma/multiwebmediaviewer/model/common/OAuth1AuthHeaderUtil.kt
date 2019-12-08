@@ -1,6 +1,5 @@
 package io.github.umatoma.multiwebmediaviewer.model.common
 
-import android.util.Log
 import okhttp3.FormBody
 import okhttp3.Request
 import java.net.URLEncoder
@@ -106,7 +105,6 @@ class OAuth1AuthHeaderUtil(
         val requestUrl = request.url.toString().split("?")[0]
 
         val queryParams = extractQueryParams(request)
-        Log.d("HOGE", queryParams.toString())
         val bodyParams = extractFormBodyParams(request)
         val requestParams = (oauthParams + queryParams + bodyParams)
             .toSortedMap()

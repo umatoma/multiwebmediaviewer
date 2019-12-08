@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer.view.home
+package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import io.github.umatoma.multiwebmediaviewer.R
-import io.github.umatoma.multiwebmediaviewer.viewModel.home.HomeViewModel
+import io.github.umatoma.multiwebmediaviewer.view.home.viewModel.HomeViewModel
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
