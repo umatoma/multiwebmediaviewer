@@ -69,9 +69,7 @@ object FeedlyAuthViewModelTest : Spek({
 
         val testCode = "TEST_CODE"
         val testAccessToken = createTestAccessToken()
-        val testException = Exception("TEST_EXCEPTION")
         val accessTokenObserverMock = mockk<Observer<FeedlyAccessToken>>(relaxUnitFun = true)
-        val exceptionObserverMock = mockk<Observer<Exception>>(relaxUnitFun = true)
 
         beforeEachTest {
             coEvery { feedlyRepositoryMock.getAccessToken(testCode) } returns testAccessToken
@@ -98,6 +96,9 @@ object FeedlyAuthViewModelTest : Spek({
         }
 
         context("when exception has happened") {
+
+            val testException = Exception("TEST_EXCEPTION")
+            val exceptionObserverMock = mockk<Observer<Exception>>(relaxUnitFun = true)
 
             beforeEachTest {
                 coEvery { feedlyRepositoryMock.getAccessToken(testCode) } throws testException
