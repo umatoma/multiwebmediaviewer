@@ -4,7 +4,6 @@ import io.github.umatoma.multiwebmediaviewer.model.common.OAuth1AuthHeaderUtil
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaAccessToken
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaRequestToken
-import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody

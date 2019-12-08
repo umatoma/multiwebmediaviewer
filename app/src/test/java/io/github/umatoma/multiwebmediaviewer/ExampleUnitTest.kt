@@ -1,17 +1,16 @@
 package io.github.umatoma.multiwebmediaviewer
 
-import org.junit.Test
+import com.google.common.truth.Truth.assertThat
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 
-import org.junit.Assert.*
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+object ExampleSpec: Spek({
+
+    describe("Example") {
+
+        it("should return 3") {
+            assertThat((1 + 2).toInt()).isEqualTo(3)
+        }
     }
-}
+})
