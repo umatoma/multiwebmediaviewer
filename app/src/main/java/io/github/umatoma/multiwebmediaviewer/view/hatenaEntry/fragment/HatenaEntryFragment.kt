@@ -2,6 +2,7 @@ package io.github.umatoma.multiwebmediaviewer.view.hatenaEntry.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ class HatenaEntryFragment : Fragment() {
 
     companion object {
 
-        private const val KEY_ENTRY= "KEY_ENTRY"
+        private const val KEY_ENTRY = "KEY_ENTRY"
 
         fun newInstance(entry: HatenaEntry): HatenaEntryFragment {
             val bundle = Bundle().also {
@@ -24,8 +25,8 @@ class HatenaEntryFragment : Fragment() {
             }
             return HatenaEntryFragment()
                 .also {
-                it.arguments = bundle
-            }
+                    it.arguments = bundle
+                }
         }
     }
 
@@ -45,6 +46,13 @@ class HatenaEntryFragment : Fragment() {
         webViewHatenaEntry.let {
             it.webViewClient = object : WebViewClient() {}
             it.settings.javaScriptEnabled = true
+            it.setOnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_BACK && webViewHatenaEntry.canGoBack()) {
+                    webViewHatenaEntry.goBack()
+                    return@setOnKeyListener true
+                }
+                return@setOnKeyListener false
+            }
             it.loadUrl(entry.url)
         }
     }
