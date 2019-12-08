@@ -77,7 +77,6 @@ object FeedlyAuthViewModelTest : Spek({
             coEvery { feedlyRepositoryMock.getAccessToken(testCode) } returns testAccessToken
             every { feedlyRepositoryMock.putAccessToken(testAccessToken) } just Runs
             viewModel.accessTokenLiveData.observeForever(accessTokenObserverMock)
-            viewModel.exceptionLiveData.observeForever(exceptionObserverMock)
         }
 
         it("should get access token from repository") {
@@ -100,9 +99,12 @@ object FeedlyAuthViewModelTest : Spek({
 
         context("when exception has happened") {
 
-            it("should post exception to observer") {
+            beforeEachTest {
                 coEvery { feedlyRepositoryMock.getAccessToken(testCode) } throws testException
+                viewModel.exceptionLiveData.observeForever(exceptionObserverMock)
+            }
 
+            it("should post exception to observer") {
                 runBlocking { viewModel.fetchAccessToken(testCode).join() }
 
                 verify { exceptionObserverMock.onChanged(testException) }
