@@ -42,13 +42,16 @@ class HomeViewModel(
 
     val isSignedInHatenaLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isSignedInFeedlyLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    val feedlyEntryListCategoryLiveData: MutableLiveData<FeedlyCategory> by lazy {
-        MutableLiveData(createCategoryAll())
-    }
+    val feedlyEntryListCategoryLiveData: MutableLiveData<FeedlyCategory> = MutableLiveData()
 
     fun signOutHatena() {
         hatenaLocalRepository.signOut()
         fetchIsSignedInHatena()
+    }
+
+    fun signOutFeedly() {
+        feedlyLocalRepository.signOut()
+        fetchIsSignedInFeedly()
     }
 
     fun fetchIsSignedInAny() {
@@ -66,13 +69,5 @@ class HomeViewModel(
 
     private fun fetchIsSignedInFeedly() {
         isSignedInFeedlyLiveData.postValue(feedlyLocalRepository.isSignedIn())
-    }
-
-    private fun createCategoryAll(): FeedlyCategory {
-        val accessToken = feedlyLocalRepository.getAccessToken()
-        return FeedlyCategory.fromUserIdAndLabel(
-            accessToken.id,
-            FeedlyCategory.Label.GLOBAL_ALL
-        )
     }
 }

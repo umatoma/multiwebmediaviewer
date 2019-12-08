@@ -3,7 +3,6 @@ package io.github.umatoma.multiwebmediaviewer.view.home
 import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import io.github.umatoma.multiwebmediaviewer.R
@@ -22,21 +21,31 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val homeViewModelFactory = HomeViewModel.Factory(requireContext())
-        val homeViewModel = ViewModelProviders
-            .of(requireActivity(), homeViewModelFactory)
-            .get(HomeViewModel::class.java)
+        val homeViewModel = HomeViewModel.Factory(requireContext()).create(requireActivity())
 
         val prefHatenaSignOut = findPreference<Preference>(
             getString(R.string.fragment_settings_key_hatena_sign_out)
         )
+        val prefFeedlySignOut = findPreference<Preference>(
+            getString(R.string.fragment_settings_key_feedly_sign_out)
+        )
+
         prefHatenaSignOut?.setOnPreferenceClickListener {
             homeViewModel.signOutHatena()
             return@setOnPreferenceClickListener true
         }
 
+        prefFeedlySignOut?.setOnPreferenceClickListener {
+            homeViewModel.signOutFeedly()
+            return@setOnPreferenceClickListener true
+        }
+
         homeViewModel.isSignedInHatenaLiveData.observe(viewLifecycleOwner, Observer {
             prefHatenaSignOut?.isEnabled = it
+        })
+
+        homeViewModel.isSignedInFeedlyLiveData.observe(viewLifecycleOwner, Observer {
+            prefFeedlySignOut?.isEnabled = it
         })
     }
 }

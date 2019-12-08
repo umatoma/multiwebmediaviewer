@@ -9,6 +9,8 @@
 <!--    <color name="colorPrimaryDark">#38006B</color>-->
 <!--    <color name="colorPrimaryText">#ffffff</color>-->
 
+    <color name="ic_launcher_background">#ffffff</color>
+
     <color name="colorPrimary">#4a138c</color>
     <color name="colorPrimaryLight">#7c42bd</color>
     <color name="colorPrimaryDark">#12005e</color>
