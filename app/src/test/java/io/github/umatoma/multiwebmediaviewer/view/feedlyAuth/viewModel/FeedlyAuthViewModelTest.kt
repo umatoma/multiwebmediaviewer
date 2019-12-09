@@ -68,7 +68,7 @@ object FeedlyAuthViewModelTest : Spek({
     describe("#fetchAccessToken()") {
 
         val testCode = "TEST_CODE"
-        val testAccessToken = createTestAccessToken()
+        val testAccessToken = createAccessToken()
         val accessTokenObserverMock = mockk<Observer<FeedlyAccessToken>>(relaxUnitFun = true)
 
         beforeEachTest {
@@ -116,7 +116,7 @@ object FeedlyAuthViewModelTest : Spek({
 
 })
 
-fun createTestAccessToken(): FeedlyAccessToken {
+private fun createAccessToken(): FeedlyAccessToken {
     return FeedlyAccessToken(
         id = "TEST_ID",
         accessToken = "TEST_ACCESS_TOKEN",

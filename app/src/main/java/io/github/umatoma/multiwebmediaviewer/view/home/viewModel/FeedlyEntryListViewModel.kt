@@ -12,6 +12,7 @@ import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyStream
 import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class FeedlyEntryListViewModel(
@@ -42,32 +43,31 @@ class FeedlyEntryListViewModel(
 
     private var currentStream: FeedlyStream? = null
 
-    fun fetchFeedlyEntryList(prevStream: FeedlyStream? = null) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val category = feedlyCategoryLiveData.value!!
-            val stream = feedlyRepository.getStreamContents(category, prevStream)
-            val entryList = stream.items
-
-            isFetchingLiveData.postValue(false)
-            currentStream = stream
-
-            if (prevStream == null) {
-                feedlyEntryListLiveData.postValue(entryList)
-            } else {
-                feedlyEntryListLiveData.postValue(feedlyEntryListLiveData.value!! + entryList)
-            }
-        }
+    fun fetchFeedlyEntryList(prevStream: FeedlyStream? = null) = CoroutineScope(Dispatchers.IO).launch {
         isFetchingLiveData.postValue(true)
+
+        val category = feedlyCategoryLiveData.value!!
+        val stream = feedlyRepository.getStreamContents(category, prevStream)
+        val entryList = stream.items
+
+        isFetchingLiveData.postValue(false)
+        currentStream = stream
+
+        if (prevStream == null) {
+            feedlyEntryListLiveData.postValue(entryList)
+        } else {
+            feedlyEntryListLiveData.postValue(feedlyEntryListLiveData.value!! + entryList)
+        }
     }
 
     fun fetchFeedlyEntryListOnNextPage() {
         fetchFeedlyEntryList(currentStream)
     }
 
-    fun setCategory(category: FeedlyCategory) {
+    fun setCategory(category: FeedlyCategory): Job {
         feedlyCategoryLiveData.postValue(category)
         feedlyEntryListLiveData.postValue(listOf())
-        fetchFeedlyEntryList()
+        return fetchFeedlyEntryList()
     }
 
     private fun createCategoryAll(): FeedlyCategory {
