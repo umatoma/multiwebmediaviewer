@@ -18,6 +18,7 @@ jobs:
       run: ./gradlew test
 
   assembleDebug:
+    needs: [test]
     runs-on: [macOS-latest]
     steps:
     - uses: actions/checkout@v1
