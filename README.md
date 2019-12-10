@@ -1,5 +1,6 @@
 # Multi Web Media Viewer
-Android application
+![](https://github.com/umatoma/multiwebmediaviewer/workflows/Android%20CI/badge.svg)  
+An application for Android
 
 # Web Media
 - はてなブックマーク
