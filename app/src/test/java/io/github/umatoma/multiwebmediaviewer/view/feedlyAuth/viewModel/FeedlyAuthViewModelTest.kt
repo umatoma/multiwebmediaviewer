@@ -19,10 +19,8 @@ object FeedlyAuthViewModelTest : Spek({
 
     val feedlyRepositoryMock = mockk<FeedlyRepository>()
     val localCallbackServerMock = mockk<OAuth2LocalCallbackServer>()
-    lateinit var viewModel: FeedlyAuthViewModel
-
-    beforeEachTest {
-        viewModel = FeedlyAuthViewModel(
+    val viewModel: FeedlyAuthViewModel by memoized {
+        FeedlyAuthViewModel(
             feedlyRepositoryMock,
             localCallbackServerMock
         )

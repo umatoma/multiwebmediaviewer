@@ -17,12 +17,8 @@ object FeedlyEntryListViewModelTest : Spek({
     applyInstantTaskExecutor()
 
     val feedlyRepositoryMock = mockk<FeedlyRepository>()
-    lateinit var viewModel: FeedlyEntryListViewModel
-
-    beforeEachTest {
-        viewModel = FeedlyEntryListViewModel(
-            feedlyRepositoryMock
-        )
+    val viewModel: FeedlyEntryListViewModel by memoized {
+        FeedlyEntryListViewModel(feedlyRepositoryMock)
     }
 
     afterEachTest {
