@@ -26,10 +26,30 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Test with Gradle
+    - name: Assemble debug with Gradle
       run: ./gradlew assembleDebug
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: app-debug.apk
         path: ./app/build/outputs/apk/debug/app-debug.apk
+        
+  distributeDebug:
+    needs: [assembleDebug]
+    runs-on: [macOS-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download artifact
+      uses: actions/download-artifact@v1.0.0
+      with:
+        name: app-debug.apk
+    - name: GitHub Action for Firebase
+      uses: w9jds/firebase-action@v1.1.0
+      with:
+        args: |
+          appdistribution:distribute app-debug.apk \
+            --app $FIREBASE_APP_ID \
+            --release-notes "${{ github.sha }}"
+      env:
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
