@@ -1,5 +1,5 @@
 # Multi Web Media Viewer
-![](https://github.com/umatoma/multiwebmediaviewer/workflows/Android%20CI/badge.svg)  
+[![](https://github.com/umatoma/multiwebmediaviewer/workflows/Android%20CI/badge.svg)](https://github.com/umatoma/multiwebmediaviewer/actions?query=workflow%3A%22Android+CI%22)  
 An application for Android
 
 # Web Media
