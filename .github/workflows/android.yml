@@ -55,6 +55,8 @@ jobs:
         firebase appdistribution:distribute ./build/app-debug.apk
         --app $FIREBASE_APP_ID
         --release-notes "${{ github.sha }}"
+        --groups $FIREBASE_TEST_GROUPS
       env:
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        FIREBASE_TEST_GROUPS: ${{ secrets.FIREBASE_TEST_GROUPS }}
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
