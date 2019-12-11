@@ -43,13 +43,14 @@ jobs:
       uses: actions/download-artifact@v1.0.0
       with:
         name: app-debug.apk
-    - name: GitHub Action for Firebase
-      uses: w9jds/firebase-action@v1.1.0
-      with:
-        args: >
-          appdistribution:distribute app-debug.apk
-          --app $FIREBASE_APP_ID
-          --release-notes "${{ github.sha }}"
+        path: build
+    - name: Install firebase cli
+      run: curl -sL firebase.tools | bash
+    - name: Distribute application
+      run: >
+        firebase appdistribution:distribute ./build/app-debug.apk
+        --app $FIREBASE_APP_ID
+        --release-notes "${{ github.sha }}"
       env:
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
