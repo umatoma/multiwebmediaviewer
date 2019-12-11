@@ -46,10 +46,10 @@ jobs:
     - name: GitHub Action for Firebase
       uses: w9jds/firebase-action@v1.1.0
       with:
-        args: |
-          appdistribution:distribute app-debug.apk \
-            --app $FIREBASE_APP_ID \
-            --release-notes "${{ github.sha }}"
+        args: >
+          appdistribution:distribute app-debug.apk
+          --app $FIREBASE_APP_ID
+          --release-notes "${{ github.sha }}"
       env:
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
