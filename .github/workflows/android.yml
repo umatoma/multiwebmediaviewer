@@ -13,12 +13,6 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
     - name: Test with Gradle
       run: ./gradlew test
 
@@ -31,12 +25,6 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
     - name: Install google-services.json
       run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
     - name: Assemble debug with Gradle
@@ -55,18 +43,6 @@ jobs:
       AVD_NAME: 'Avd_Android_28_Google_Apis_Playstore_x86_64'
     steps:
     - uses: actions/checkout@v1
-    - uses: actions/cache@v1
-      with:
-        path: $ANDROID_HOME/platforms
-        key: ${{ runner.os }}-android-${{ env.PACKAGE_NAME }}
-        restore-keys: |
-          ${{ runner.os }}-android-
-    - uses: actions/cache@v1
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
     - uses: actions/setup-java@v1
       with:
         java-version: 1.8
