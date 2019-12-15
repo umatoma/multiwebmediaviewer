@@ -6,7 +6,7 @@
         android:title="はてな" />
 
     <item
-        android:id="@+id/menuFeelyEntryList"
+        android:id="@+id/menuFeedlyEntryList"
         android:icon="@drawable/ic_feedly_logo"
         android:title="Feedly" />
 

@@ -21,9 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {}
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude "META-INF/LICENSE*"
     }
     sourceSets.each {
         it.java.srcDirs += "src/$it.name/kotlin"
@@ -40,7 +44,6 @@ android {
         }
         unitTests {
             returnDefaultValues true
-
             all {
                 testLogging {
                     showStandardStreams true
@@ -49,6 +52,16 @@ android {
             }
         }
     }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
+
+configurations {
+    [testImplementation, androidTestImplementation]*.extendsFrom allTestImplementation
 }
 
 dependencies {
@@ -95,22 +108,25 @@ dependencies {
     // androidTestImplementation 'androidx.test.ext:junit:1.1.1'
 
     // JUnit5
-    androidTestRuntimeOnly 'de.mannodermaus.junit5:android-test-runner:1.2.0'
-    androidTestImplementation 'de.mannodermaus.junit5:android-test-core:1.2.0'
-    androidTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    androidTestImplementation 'org.junit.platform:junit-platform-runner:1.5.2'
+    androidTestImplementation 'de.mannodermaus.junit5:android-test-core:1.2.0'
+    androidTestRuntimeOnly 'de.mannodermaus.junit5:android-test-runner:1.2.0'
 
     // Spek2
-    testImplementation 'org.spekframework.spek2:spek-dsl-jvm:2.0.8'
-    testImplementation 'org.spekframework.spek2:spek-runner-junit5:2.0.8'
-    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    allTestImplementation 'org.spekframework.spek2:spek-dsl-jvm:2.0.8'
+    allTestImplementation 'org.spekframework.spek2:spek-runner-junit5:2.0.8'
+    allTestImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Truth
-    testImplementation 'com.google.truth:truth:1.0'
+    allTestImplementation 'com.google.truth:truth:1.0'
 
     // MockK
     testImplementation 'io.mockk:mockk:1.9.3'
 
     // Espresso
     // androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }

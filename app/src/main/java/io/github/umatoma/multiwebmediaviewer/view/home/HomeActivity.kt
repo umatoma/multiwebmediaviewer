@@ -54,7 +54,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.menuHatenaEntryList -> {
                     showHatenaEntryListContainerFragment()
                 }
-                R.id.menuFeelyEntryList -> {
+                R.id.menuFeedlyEntryList -> {
                     showFeedlyEntryListContainerFragment()
                 }
                 R.id.menuSettings -> {
