@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v1.0.0
         with:
           name: app-prod-debug.apk
-          path: ./app/build/outputs/apk/debug/app-prod-debug.apk
+          path: ./app/build/outputs/apk/prod/debug/app-prod-debug.apk
 
   distributeDebug:
     needs: [testUnitTest, connectedAndroidTest, assembleDebug]
