@@ -1,6 +1,7 @@
 package io.github.umatoma.multiwebmediaviewer.model.feedly.repository
 
 import com.google.gson.Gson
+import io.github.umatoma.multiwebmediaviewer.BuildConfig
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyAccessToken
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCategory
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCollection
@@ -29,17 +30,17 @@ class FeedlyRemoteDataSource(
     }
 
     fun getRedirectUrl(): String {
-        return "http://localhost:8080"
+        return BuildConfig.FEEDLY_API_REDIRECT_URL
     }
 
     fun getAuthenticationUrl(): String {
-        return "https://cloud.feedly.com/v3/auth/auth"
+        return "${BuildConfig.FEEDLY_API_BASE_URL}/v3/auth/auth"
             .toHttpUrl()
             .newBuilder()
             .addQueryParameter("response_type", "code")
             .addQueryParameter("client_id", "feedly")
             .addQueryParameter("redirect_uri", getRedirectUrl())
-            .addQueryParameter("scope", "https://cloud.feedly.com/subscriptions")
+            .addQueryParameter("scope", "${BuildConfig.FEEDLY_API_BASE_URL}/subscriptions")
             .addQueryParameter("state", "state.passed.in")
             .build()
             .toString()
@@ -58,7 +59,7 @@ class FeedlyRemoteDataSource(
             .toRequestBody("application/json".toMediaType())
 
         val request = Request.Builder()
-            .url("https://cloud.feedly.com/v3/auth/token")
+            .url("${BuildConfig.FEEDLY_API_BASE_URL}/v3/auth/token")
             .post(requestBody)
             .build()
 
@@ -70,7 +71,7 @@ class FeedlyRemoteDataSource(
     suspend fun getStreamContents(category: FeedlyCategory, prevStream: FeedlyStream?): FeedlyStream = withContext(Dispatchers.IO) {
         val count = 30
         val continuation = prevStream?.continuation
-        val requestUrl = "https://cloud.feedly.com/v3/streams/contents"
+        val requestUrl = "${BuildConfig.FEEDLY_API_BASE_URL}/v3/streams/contents"
             .toHttpUrl()
             .newBuilder()
             .addQueryParameter("streamId", category.id)
@@ -88,7 +89,7 @@ class FeedlyRemoteDataSource(
     }
 
     suspend fun getCollections(): List<FeedlyCollection> = withContext(Dispatchers.IO) {
-        val requestUrl = "https://cloud.feedly.com/v3/collections"
+        val requestUrl = "${BuildConfig.FEEDLY_API_BASE_URL}/v3/collections"
         val request = Request.Builder()
             .url(requestUrl)
             .build()

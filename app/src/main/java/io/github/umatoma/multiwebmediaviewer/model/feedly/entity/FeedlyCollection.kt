@@ -6,7 +6,7 @@ import com.google.gson.JsonParser
 class FeedlyCollection(
     id: String,
     label: String,
-    description: String?,
+    description: String? = null,
     val cover: String? = null,
     val feeds: List<FeedlyFeed>? = null
 ) : FeedlyCategory(id, label, description) {

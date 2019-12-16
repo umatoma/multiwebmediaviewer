@@ -46,7 +46,7 @@ class HatenaEntryFragment : Fragment() {
         webViewHatenaEntry.let {
             it.webViewClient = object : WebViewClient() {}
             it.settings.javaScriptEnabled = true
-            it.setOnKeyListener { v, keyCode, event ->
+            it.setOnKeyListener { _, keyCode, _ ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && webViewHatenaEntry.canGoBack()) {
                     webViewHatenaEntry.goBack()
                     return@setOnKeyListener true

@@ -1,5 +1,6 @@
 package io.github.umatoma.multiwebmediaviewer.model.hatena.repository
 
+import io.github.umatoma.multiwebmediaviewer.BuildConfig
 import io.github.umatoma.multiwebmediaviewer.model.common.OAuth1AuthHeaderUtil
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaAccessToken
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
@@ -24,11 +25,11 @@ class HatenaRemoteDataSource(
         private const val CONSUMER_KEY = "UKPgBFtq73oNBQ=="
         private const val CONSUMER_SECRET = "v/CdhV9DxEOC3CAX7W57SsbBCr4="
         private const val URL_TEMPORARY_CREDENTIAL_REQUEST =
-            "https://www.hatena.com/oauth/initiate"
+             "${BuildConfig.HATENA_API_AUTH_BASE_URL}/oauth/initiate"
         private const val URL_RESOURCE_OWNER_AUTHORIZATION =
-            "https://www.hatena.ne.jp/touch/oauth/authorize"
+            "${BuildConfig.HATENA_API_AUTH_BASE_URL}/touch/oauth/authorize"
         private const val URL_TOKEN_REQUEST =
-            "https://www.hatena.com/oauth/token"
+            "${BuildConfig.HATENA_API_AUTH_BASE_URL}/oauth/token"
     }
 
     private val oauth1Interceptor =
@@ -131,7 +132,7 @@ class HatenaRemoteDataSource(
         }
 
     suspend fun getEntry(url: String): HatenaEntry = withContext(Dispatchers.IO) {
-        val requestUrl = "https://b.hatena.ne.jp/entry/json/${url}"
+        val requestUrl = "${BuildConfig.HATENA_API_ENTRY_BASE_URL}/entry/json/${url}"
 
         val request = Request.Builder()
             .url(requestUrl)
@@ -149,7 +150,7 @@ class HatenaRemoteDataSource(
             val limit = 30
             val offset = limit * (pageNumber - 1)
 
-            val requestUrl = "https://b.hatena.ne.jp/api/ipad.hotentry.json"
+            val requestUrl = "${BuildConfig.HATENA_API_ENTRY_BASE_URL}/api/ipad.hotentry.json"
                 .toHttpUrl()
                 .newBuilder()
                 .addQueryParameter("category_id", category.numId)
@@ -173,7 +174,7 @@ class HatenaRemoteDataSource(
             val limit = 30
             val offset = limit * (pageNumber - 1)
 
-            val requestUrl = "https://b.hatena.ne.jp/api/ipad.newentry.json"
+            val requestUrl = "${BuildConfig.HATENA_API_ENTRY_BASE_URL}/api/ipad.newentry.json"
                 .toHttpUrl()
                 .newBuilder()
                 .addQueryParameter("category_id", category.numId)
