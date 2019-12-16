@@ -57,8 +57,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: app-debug.apk
-          path: ./app/build/outputs/apk/debug/app-debug.apk
+          name: app-prod-debug.apk
+          path: ./app/build/outputs/apk/debug/app-prod-debug.apk
 
   distributeDebug:
     needs: [testUnitTest, connectedAndroidTest, assembleDebug]
@@ -72,13 +72,13 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v1.0.0
       with:
-        name: app-debug.apk
+        name: app-prod-debug.apk
         path: build
     - name: Install firebase cli
       run: curl -sL firebase.tools | bash
     - name: Distribute application
       run: >
-        firebase appdistribution:distribute ./build/app-debug.apk
+        firebase appdistribution:distribute ./build/app-prod-debug.apk
         --app $FIREBASE_APP_ID
         --release-notes "${{ github.sha }}"
         --groups $FIREBASE_TEST_GROUPS
