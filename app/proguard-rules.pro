@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.google.android.material.**
+-keep class com.google.android.material.** { *; }
+
+-dontwarn androidx.**
+-keep class androidx.** { *; }
+-keep interface androidx.** { *; }
+
+-keep class * extends androidx.lifecycle.ViewModel {
+    <init>(...);
+}
+-keepnames class io.github.umatoma.multiwebmediaviewer.model.**.entity.** { *; }
+#-keep class io.github.umatoma.multiwebmediaviewer.** { *; }
