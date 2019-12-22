@@ -2,8 +2,8 @@ package io.github.umatoma.multiwebmediaviewer.view.feedlyAuth.viewModel
 
 import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
-import io.github.umatoma.multiwebmediaviewer.applyInstantTaskExecutor
-import io.github.umatoma.multiwebmediaviewer.applyTestDispatcher
+import io.github.umatoma.multiwebmediaviewer.common.applyInstantTaskExecutor
+import io.github.umatoma.multiwebmediaviewer.common.applyTestDispatcher
 import io.github.umatoma.multiwebmediaviewer.model.common.OAuth2LocalCallbackServer
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyAccessToken
 import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRepository

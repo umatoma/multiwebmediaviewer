@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer
+package io.github.umatoma.multiwebmediaviewer.largeTest.common
 
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector

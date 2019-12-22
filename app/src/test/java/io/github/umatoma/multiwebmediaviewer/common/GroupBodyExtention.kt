@@ -1,4 +1,4 @@
-package io.github.umatoma.multiwebmediaviewer
+package io.github.umatoma.multiwebmediaviewer.common
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor

@@ -1,9 +1,11 @@
-package io.github.umatoma.multiwebmediaviewer
+package io.github.umatoma.multiwebmediaviewer.largeTest
 
 import androidx.test.filters.LargeTest
 import androidx.test.uiautomator.UiSelector
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
+import io.github.umatoma.multiwebmediaviewer.*
+import io.github.umatoma.multiwebmediaviewer.largeTest.common.*
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.*
 import io.github.umatoma.multiwebmediaviewer.model.hatena.entity.HatenaEntry
 import okhttp3.mockwebserver.Dispatcher
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.*
 import java.net.URL
 
 @LargeTest
-class HomeActivityInstrumentedTest : BaseInstrumentedTest() {
+class HomeActivityLargeTest : BaseLargeTest() {
 
     companion object {
 
@@ -48,10 +50,10 @@ class HomeActivityInstrumentedTest : BaseInstrumentedTest() {
 
     @Nested
     @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-    inner class hatenaTest {
+    inner class hatena_entry_list {
         @Test
         @Order(1)
-        fun hatenaSignInTest() {
+        fun it_should_sign_in() {
             device.findObjectByResourceIdMatches(".+menuHatenaEntryList").click()
             device.findObjectByText("はてなID 認証").click()
 
@@ -66,7 +68,7 @@ class HomeActivityInstrumentedTest : BaseInstrumentedTest() {
 
         @Test
         @Order(2)
-        fun hatenaEntryListTest() {
+        fun it_should_display_entry_list() {
             device.findObjectByResourceIdMatches(".+menuHatenaEntryList").click()
 
             assertThat(device.findObjectByText("新着").exists()).isTrue()
@@ -90,7 +92,7 @@ class HomeActivityInstrumentedTest : BaseInstrumentedTest() {
 
         @Test
         @Order(3)
-        fun hatenaSignOutTest() {
+        fun it_should_sign_out() {
             device.findObjectByResourceIdMatches(".+menuSettings").click()
             device.findObjectsByText("ログアウト")[0].click()
 
@@ -101,10 +103,10 @@ class HomeActivityInstrumentedTest : BaseInstrumentedTest() {
 
     @Nested
     @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-    inner class feedlyTest {
+    inner class feedly_entry_list {
         @Test
         @Order(1)
-        fun feedlySignInTest() {
+        fun it_should_sign_in() {
             device.findObjectByResourceIdMatches(".+menuFeedlyEntryList").click()
             device.findObjectByText("FEEDLY 認証").click()
 
@@ -119,7 +121,7 @@ class HomeActivityInstrumentedTest : BaseInstrumentedTest() {
 
         @Test
         @Order(2)
-        fun feedlyEntryListTest() {
+        fun it_should_display_entry_list() {
             device.findObjectByResourceIdMatches(".+menuFeedlyEntryList").click()
 
             assertThat(device.findObjectByText("Feeds").exists()).isTrue()
@@ -141,7 +143,7 @@ class HomeActivityInstrumentedTest : BaseInstrumentedTest() {
 
         @Test
         @Order(3)
-        fun feedlySignOutTest() {
+        fun it_should_sign_out() {
             device.findObjectByResourceIdMatches(".+menuSettings").click()
             device.findObjectsByText("ログアウト")[1].click()
 
@@ -184,15 +186,17 @@ private val feedlyMockWebServerDispatcher = object : Dispatcher() {
         val response = MockResponse()
         return when (path) {
             "/v3/auth/token" -> response.setBody(
-                Gson().toJson(FeedlyAccessToken(
-                    id = "TEST_ID",
-                    accessToken = "TEST_ACCESS_TOKEN",
-                    refreshToken = "TEST_REFRESH_TOKEN",
-                    expiresIn = 99999,
-                    tokenType = "Bearer",
-                    plan = "standard",
-                    state = "state.passed.in"
-                ))
+                Gson().toJson(
+                    FeedlyAccessToken(
+                        id = "TEST_ID",
+                        accessToken = "TEST_ACCESS_TOKEN",
+                        refreshToken = "TEST_REFRESH_TOKEN",
+                        expiresIn = 99999,
+                        tokenType = "Bearer",
+                        plan = "standard",
+                        state = "state.passed.in"
+                    )
+                )
             )
             "/v3/streams/contents" -> response.setBody(
                 Gson().toJson(
@@ -214,10 +218,12 @@ private val feedlyMockWebServerDispatcher = object : Dispatcher() {
                 )
             )
             "/v3/collections" -> response.setBody(
-                Gson().toJson(listOf(
-                    FeedlyCollection(id = "ID_1", label = "LABEL_1"),
-                    FeedlyCollection(id = "ID_2", label = "LABEL_2")
-                ))
+                Gson().toJson(
+                    listOf(
+                        FeedlyCollection(id = "ID_1", label = "LABEL_1"),
+                        FeedlyCollection(id = "ID_2", label = "LABEL_2")
+                    )
+                )
             )
             else -> response.setResponseCode(404)
         }
