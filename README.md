@@ -10,4 +10,4 @@ An application for Android
 ![architecture](https://user-images.githubusercontent.com/7200238/70391734-ae5d2300-1a1b-11ea-8c0f-bacbf97737ca.png)
 
 # Pipeline
-![pipeline](https://user-images.githubusercontent.com/7200238/70861018-fd4f0f00-1f6b-11ea-8659-175564021b18.png)
+![pipeline](https://user-images.githubusercontent.com/7200238/71357164-0ec99400-25c8-11ea-8d4c-7b3d7f498cd6.png)
