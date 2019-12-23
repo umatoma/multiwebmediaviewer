@@ -50,8 +50,7 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {}
     }
 
-    private val footerItem =
-        FooterItem()
+    private val footerItem = FooterItem()
     private val entryItemListSection = Section()
     private var onClickEntryListener: ((FeedlyEntry) -> Unit)? = null
     private var onClickFooterListener: (() -> Unit)? = null
