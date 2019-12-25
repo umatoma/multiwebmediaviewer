@@ -4,10 +4,15 @@ on:
   push:
     branches: 
       - master
+      - movedir
+    # paths:
+    #   - 'android/**'
 
 jobs:
   testUnitTest:
     runs-on: [macos-latest]
+    env:
+      WORKING_DIRECTORY: ./android
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
@@ -15,12 +20,14 @@ jobs:
         java-version: 1.8
     - name: testStubDebugUnitTest
       run: ./gradlew testStubDebugUnitTest
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
   connectedAndroidTest:
     runs-on: [macos-latest]
     env:
       PACKAGE_NAME: 'system-images;android-28;google_apis_playstore;x86_64'
       AVD_NAME: 'Avd_Android_28_Google_Apis_Playstore_x86_64'
+      WORKING_DIRECTORY: ./android
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
@@ -39,6 +46,7 @@ jobs:
         $ANDROID_HOME/platform-tools/adb shell service list
     - name: connectedStubDebugAndroidTest
       run: ./gradlew connectedStubDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments=size=large
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
   assembleProdRelease:
     runs-on: [macos-latest]
@@ -49,6 +57,7 @@ jobs:
       RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
       RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
       RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      WORKING_DIRECTORY: ./android
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -56,17 +65,20 @@ jobs:
           java-version: 1.8
       - name: Install google-services.json
         run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+        working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Install keystore
         run: |
           mkdir -p `dirname $RELEASE_STORE_FILE`
           echo $RELEASE_STORE | base64 --decode --output $RELEASE_STORE_FILE
+        working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Assemble debug with Gradle
         run: ./gradlew assembleProdRelease
+        working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           name: app-prod-release.apk
-          path: ./app/build/outputs/apk/prod/release/app-prod-release.apk
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/outputs/apk/prod/release/app-prod-release.apk
 
   distributeProdRelease:
     needs: [testUnitTest, connectedAndroidTest, assembleProdRelease]
@@ -75,18 +87,20 @@ jobs:
       FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
       FIREBASE_TEST_GROUPS: ${{ secrets.FIREBASE_TEST_GROUPS }}
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      WORKING_DIRECTORY: ./android
     steps:
     - uses: actions/checkout@v1
+    - name: Install firebase cli
+      run: curl -sL firebase.tools | bash
     - name: Download artifact
       uses: actions/download-artifact@v1.0.0
       with:
         name: app-prod-release.apk
-        path: build
-    - name: Install firebase cli
-      run: curl -sL firebase.tools | bash
+        path: ${{ env.WORKING_DIRECTORY }}/build
     - name: Distribute application
       run: >
         firebase appdistribution:distribute ./build/app-prod-release.apk
         --app $FIREBASE_APP_ID
         --release-notes "${{ github.sha }}"
         --groups $FIREBASE_TEST_GROUPS
+      working-directory: ${{ env.WORKING_DIRECTORY }}
