@@ -4,9 +4,8 @@ on:
   push:
     branches: 
       - master
-      - movedir
-    # paths:
-    #   - 'android/**'
+    paths:
+      - 'android/**'
 
 jobs:
   testUnitTest:
