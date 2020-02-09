@@ -16,7 +16,8 @@ class FeedlyRepository(
         fun create(): FeedlyRepository {
             val localRepository = FeedlyLocalDataSource(context)
             val remoteRepository = FeedlyRemoteDataSource(
-                getLocalAccessToken = { localRepository.getAccessToken() }
+                getLocalAccessToken = { localRepository.getAccessToken() },
+                putAccessToken = { accessToken -> localRepository.putAccessToken(accessToken) }
             )
             return FeedlyRepository(localRepository, remoteRepository)
         }

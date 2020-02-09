@@ -17,8 +17,14 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 
 class FeedlyRemoteDataSource(
-    private val getLocalAccessToken: () -> FeedlyAccessToken
+    private val getLocalAccessToken: () -> FeedlyAccessToken,
+    private val putAccessToken: (accessToken: FeedlyAccessToken) -> Unit
 ) {
+
+    companion object {
+        private class UnauthorizedException(message: String) : Exception(message)
+        private class ForbiddenException(message: String) : Exception(message)
+    }
 
     private val okHttpClient: OkHttpClient by lazy {
         val loggingInterceptor = HttpLoggingInterceptor().also {
@@ -105,7 +111,11 @@ class FeedlyRemoteDataSource(
             .execute()
 
         if (!response.isSuccessful) {
-            throw IOException("Unexpected code ${response.code}")
+            when (response.code) {
+                401 -> throw UnauthorizedException(response.message)
+                403 -> throw ForbiddenException(response.message)
+                else -> throw IOException("Unexpected code ${response.code}")
+            }
         }
 
         if (response.body == null) {
@@ -115,11 +125,52 @@ class FeedlyRemoteDataSource(
         return response.body!!.string()
     }
 
-    private fun executeAuthRequest(request: Request): String {
+    private suspend fun executeAuthRequest(request: Request): String = withContext(Dispatchers.IO) {
         val accessToken = getLocalAccessToken()
-        val newRequest = request.newBuilder()
-            .addHeader("Authorization", "Bearer ${accessToken.accessToken}")
+
+        try {
+            val newRequest = request.newBuilder()
+                .addHeader("Authorization", "Bearer ${accessToken.accessToken}")
+                .build()
+
+            return@withContext executeRequest(newRequest)
+        } catch (e: Exception) {
+            if (
+                e is ForbiddenException ||
+                e is UnauthorizedException
+            ) {
+                val refreshedAccessToken = getRefreshedAccessToken(accessToken.refreshToken)
+                putAccessToken(refreshedAccessToken)
+
+                val newRequest = request.newBuilder()
+                    .addHeader("Authorization", "Bearer ${refreshedAccessToken.accessToken}")
+                    .build()
+
+                return@withContext executeRequest(newRequest)
+            } else {
+                throw e
+            }
+        }
+    }
+
+    private suspend fun getRefreshedAccessToken(refreshToken: String): FeedlyAccessToken = withContext(Dispatchers.IO) {
+        val jsonParams = mapOf(
+            "refresh_token" to refreshToken,
+            "client_id" to "feedly",
+            "client_secret" to "0XP4XQ07VVMDWBKUHTJM4WUQ",
+            "grant_type" to "refresh_token"
+        )
+        val requestBody = Gson().toJson(jsonParams)
+            .toRequestBody("application/json".toMediaType())
+
+        val requestUrl = "${BuildConfig.FEEDLY_API_BASE_URL}/v3/auth/token"
+        val request = Request.Builder()
+            .url(requestUrl)
+            .post(requestBody)
             .build()
-        return executeRequest(newRequest)
+
+        val body = executeRequest(request)
+
+        return@withContext FeedlyAccessToken.fromJSON(body)
     }
 }
