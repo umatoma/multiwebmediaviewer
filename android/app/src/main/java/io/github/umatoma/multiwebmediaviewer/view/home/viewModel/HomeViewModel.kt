@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyAccessToken
 import io.github.umatoma.multiwebmediaviewer.model.feedly.entity.FeedlyCategory
 import io.github.umatoma.multiwebmediaviewer.model.feedly.repository.FeedlyRepository
 import io.github.umatoma.multiwebmediaviewer.model.hatena.repository.HatenaRepository
+import kotlin.Exception
 
 class HomeViewModel(
     private val hatenaRepository: HatenaRepository,
@@ -37,9 +39,11 @@ class HomeViewModel(
         }
     }
 
+    val exceptionLiveData: MutableLiveData<Exception> = MutableLiveData()
     val isSignedInHatenaLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isSignedInFeedlyLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val feedlyEntryListCategoryLiveData: MutableLiveData<FeedlyCategory> = MutableLiveData()
+    val feedlyAccessTokenLiveData: MutableLiveData<FeedlyAccessToken> = MutableLiveData()
 
     fun signOutHatena() {
         hatenaRepository.signOut()
@@ -58,6 +62,14 @@ class HomeViewModel(
 
     fun setFeedlyEntryListCategory(category: FeedlyCategory) {
         feedlyEntryListCategoryLiveData.postValue(category)
+    }
+
+    fun fetchFeedlyAccessToken() {
+        try {
+            feedlyAccessTokenLiveData.postValue(feedlyRepository.getAccessToken())
+        } catch (e: Exception) {
+            exceptionLiveData.postValue(e)
+        }
     }
 
     private fun fetchIsSignedInHatena() {

@@ -14,6 +14,10 @@
             app:key="@string/fragment_settings_key_feedly_sign_out"
             app:title="ログアウト"/>
 
+        <Preference
+            app:key="_FEEDLY_ACCESS_TOKEN"
+            app:title="アクセストークン"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
