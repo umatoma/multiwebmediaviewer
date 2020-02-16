@@ -54,6 +54,7 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
     private val entryItemListSection = Section()
     private var onClickEntryListener: ((FeedlyEntry) -> Unit)? = null
     private var onClickFooterListener: (() -> Unit)? = null
+    private var onLongClickEntryListener: ((FeedlyEntry) -> Unit)? = null
 
     init {
         add(entryItemListSection)
@@ -61,6 +62,15 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
             when (item) {
                 is EntryItem -> onClickEntryListener?.invoke(item.entry)
                 is FooterItem -> onClickFooterListener?.invoke()
+            }
+        }
+        setOnItemLongClickListener { item, view ->
+            return@setOnItemLongClickListener when (item) {
+                is EntryItem -> {
+                    onLongClickEntryListener?.invoke(item.entry)
+                    true
+                }
+                else -> false
             }
         }
     }
@@ -71,6 +81,10 @@ class FeedlyEntryListAdapter() : GroupAdapter<GroupieViewHolder>() {
 
     fun onClickFooter(onClick: () -> Unit) {
         onClickFooterListener = onClick
+    }
+
+    fun onLongClickEntry(onLongClick: (FeedlyEntry) -> Unit) {
+        onLongClickEntryListener = onLongClick
     }
 
     fun setEntryList(entryList: List<FeedlyEntry>) {

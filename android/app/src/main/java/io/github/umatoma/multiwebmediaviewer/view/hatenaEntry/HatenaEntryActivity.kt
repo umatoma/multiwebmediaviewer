@@ -124,7 +124,7 @@ class HatenaEntryActivity : AppCompatActivity() {
     private fun shareEntry(entry: HatenaEntry) {
         val sendIntent = Intent().also {
             it.action = Intent.ACTION_SEND
-            it.putExtra(Intent.EXTRA_TEXT, "${entry.title}\n${entry.url}")
+            it.putExtra(Intent.EXTRA_TEXT, entry.url)
             it.type = "text/plain"
         }
         val shareIntent = Intent.createChooser(sendIntent, null)

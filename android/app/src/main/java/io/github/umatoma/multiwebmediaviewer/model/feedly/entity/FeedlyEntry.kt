@@ -6,5 +6,13 @@ class FeedlyEntry(
     val canonicalUrl: String? = null,
     val visual: FeedlyVisual? = null,
     val engagement: Int? = null,
-    val origin: FeedlyOrigin
-)
+    val origin: FeedlyOrigin,
+    val alternate: List<FeedlyAlternate> = listOf()
+) {
+    fun getEntryUrl(): String? {
+        if (alternate.isNotEmpty()) {
+            return alternate[0].href
+        }
+        return canonicalUrl
+    }
+}
