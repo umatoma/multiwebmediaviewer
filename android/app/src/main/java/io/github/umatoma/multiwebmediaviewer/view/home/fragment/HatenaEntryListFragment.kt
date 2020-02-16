@@ -1,10 +1,12 @@
 package io.github.umatoma.multiwebmediaviewer.view.home.fragment
 
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -32,8 +34,8 @@ class HatenaEntryListFragment : Fragment() {
             }
             return HatenaEntryListFragment()
                 .also {
-                it.arguments = bundle
-            }
+                    it.arguments = bundle
+                }
         }
     }
 
@@ -60,13 +62,9 @@ class HatenaEntryListFragment : Fragment() {
 
         val entryListAdapter = HatenaEntryListAdapter()
             .also {
-            it.onClickEntry { entry ->
-                HatenaEntryActivity.startActivity(requireContext(), entry)
+                it.onClickEntry { entry -> displayHatenaEntryView(entry) }
+                it.onClickFooter { viewModel.fetchHatenaEntryListOnNextPage() }
             }
-            it.onClickFooter {
-                viewModel.fetchHatenaEntryListOnNextPage()
-            }
-        }
 
         recyclerViewHatenaEntryList.also {
             val divider = DividerItemDecoration(
@@ -92,5 +90,10 @@ class HatenaEntryListFragment : Fragment() {
         })
 
         viewModel.fetchHatenaEntryList()
+    }
+
+    private fun displayHatenaEntryView(entry: HatenaEntry) {
+        val customTabsIntent = CustomTabsIntent.Builder().build()
+        customTabsIntent.launchUrl(requireContext(), Uri.parse(entry.url))
     }
 }
